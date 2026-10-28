@@ -1,8 +1,9 @@
 """OPEN LAB 展示版：本機預覽用的靜態伺服器（只綁 127.0.0.1）。
 
-只提供會公開的東西：web/、data/、clips/、covers/。local/、tools/、.git 等一律 404。
-支援 Range（影片拖曳、切換機位對時要用）。網址：http://127.0.0.1:<埠>/web/index.html
-用法：py tools\\serve_local.py [--port 4780]
+只提供會公開的東西：site/、web/、data/、clips/、covers/。local/、tools/、.git 等一律 404。
+網址根 / 轉到作品首頁 /site/index.html。--root dist 可以直接預覽打包結果（必須在專案資料夾底下）。
+支援 Range（影片拖曳、切換機位對時要用）。網址：http://127.0.0.1:<埠>/
+用法：py tools\\serve_local.py [--root dist] [--port 4780]
 （8740 不能用：落在 Windows 保留的 TCP 埠範圍 8712–8811，綁定會被拒絕 10013；第 2 輪實測）
 """
 import argparse
@@ -12,12 +13,13 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ALLOW = ("web", "data", "clips", "covers")
+ALLOW = ("site", "web", "data", "clips", "covers")
+SERVE_ROOT = ROOT          # 由 --root 改
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
-        super().__init__(*a, directory=ROOT, **kw)
+        super().__init__(*a, directory=SERVE_ROOT, **kw)
 
     def _allowed(self):
         path = self.path.split("?", 1)[0].split("#", 1)[0]
@@ -29,7 +31,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def send_head(self):
         if self.path.split("?", 1)[0] in ("/", ""):
             self.send_response(302)
-            self.send_header("Location", "/web/index.html")
+            self.send_header("Location", "/site/index.html")
             self.end_headers()
             return None
         if not self._allowed():
@@ -91,9 +93,22 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=4780)
+    ap.add_argument("--root", help="要提供的資料夾（專案內，例：dist）；預設＝專案根")
     args = ap.parse_args()
+    global SERVE_ROOT
+    if args.root:
+        r = os.path.realpath(os.path.join(ROOT, args.root) if not os.path.isabs(args.root) else args.root)
+        base = os.path.normcase(os.path.realpath(ROOT))
+        try:
+            inside = os.path.commonpath([os.path.normcase(r), base]) == base
+        except ValueError:
+            inside = False
+        if not inside or not os.path.isdir(r):
+            print("停止：--root 必須是專案資料夾底下已存在的資料夾", file=sys.stderr)
+            sys.exit(2)
+        SERVE_ROOT = r
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
-    print(f"預覽：http://127.0.0.1:{args.port}/web/index.html（只綁 127.0.0.1；Ctrl+C 關閉）", flush=True)
+    print(f"預覽：http://127.0.0.1:{args.port}/（提供 {os.path.relpath(SERVE_ROOT, ROOT)}；只綁 127.0.0.1；Ctrl+C 關閉）", flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

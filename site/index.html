@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:,">
+<title>DEA MAM — 職業籃球隊影像素材 AI 索引系統</title>
+<style>
+  /* 視覺沿用 web/index.html（深色、黃色重點、藍色互動）；另備淺色，讓架構圖在兩種模式都清楚 */
+  :root { --bg:#0f1115; --panel:#181b22; --panel2:#1f232c; --line:#2a2f3a; --fg:#e8eaf0; --dim:#9aa3b2;
+          --acc:#f5c518; --acc-fg:#111; --acc2:#3b82f6; --todo-bg:#3a1d1d; --todo-fg:#ffb4b4; --todo-line:#e5484d; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f6f7f9; --panel:#ffffff; --panel2:#eef1f5; --line:#cfd5de; --fg:#161a22; --dim:#5b6472;
+            --acc:#f5c518; --acc-fg:#111; --acc2:#2563eb; --todo-bg:#fde8e8; --todo-fg:#9b1c1c; --todo-line:#e5484d; }
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--fg); line-height:1.7;
+         font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif; }
+  .wrap { max-width:980px; margin:0 auto; padding:0 20px; }
+  .todo { display:inline-block; background:var(--todo-bg); color:var(--todo-fg); border:1px dashed var(--todo-line);
+          border-radius:6px; padding:0 7px; font-size:13px; font-weight:700; line-height:1.8; vertical-align:middle; }
+  header.hero { padding:44px 0 26px; border-bottom:1px solid var(--line); }
+  .hero .kicker { color:var(--dim); font-size:14px; letter-spacing:.05em; }
+  .hero h1 { margin:6px 0 10px; font-size:30px; line-height:1.35; }
+  .hero .one { font-size:18px; margin:0 0 20px; }
+  .cta { display:flex; flex-wrap:wrap; gap:10px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-weight:700; font-size:16px;
+         border-radius:10px; padding:11px 18px; border:1px solid var(--line); color:var(--fg); background:var(--panel); }
+  .btn.primary { background:var(--acc); color:var(--acc-fg); border-color:var(--acc); }
+  .btn.placeholder { border-style:dashed; color:var(--dim); cursor:not-allowed; }
+  section { padding:34px 0 8px; }
+  section h2 { font-size:22px; margin:0 0 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  section h2 .no { color:var(--acc); font-size:15px; font-weight:700; border:1px solid var(--acc); border-radius:6px; padding:0 7px; }
+  .lead { color:var(--dim); margin-top:-4px; }
+  .pain { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .pain div, .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .pain b { display:block; font-size:22px; color:var(--acc); }
+  ol.points { padding-left:0; list-style:none; counter-reset:p; margin:12px 0 0; }
+  ol.points li { counter-increment:p; position:relative; padding:10px 0 10px 44px; border-bottom:1px solid var(--line); }
+  ol.points li::before { content:counter(p); position:absolute; left:0; top:11px; width:30px; height:30px; border-radius:50%;
+          background:var(--panel2); border:1px solid var(--line); text-align:center; line-height:28px; font-weight:700; color:var(--acc); }
+  ol.points b { display:block; }
+  figure { margin:22px 0 0; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  figure svg { display:block; width:100%; max-width:620px; height:auto; margin:0 auto; }
+  figcaption { color:var(--dim); font-size:13px; text-align:center; margin-top:8px; }
+  /* 架構圖顏色全部走變數 → 深淺色都清楚 */
+  .g-box { fill:var(--panel2); stroke:var(--line); stroke-width:1.5; }
+  .g-key { fill:var(--panel2); stroke:var(--acc); stroke-width:2.5; }
+  .g-out { fill:var(--panel2); stroke:var(--acc2); stroke-width:2; }
+  .g-t  { fill:var(--fg); font-size:19px; font-weight:700; }
+  .g-s  { fill:var(--dim); font-size:14px; }
+  .g-a  { stroke:var(--dim); stroke-width:2; fill:none; }
+  .g-d  { stroke:var(--dim); stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+  .g-ah { fill:var(--dim); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+  .card h3 { margin:0 0 8px; font-size:17px; }
+  .card ul { margin:0; padding-left:20px; }
+  .demo { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; aspect-ratio:16/9;
+          background:var(--panel); border:2px dashed var(--line); border-radius:12px; color:var(--dim); text-align:center; padding:16px; }
+  table { width:100%; border-collapse:collapse; margin-top:10px; font-size:15px; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--dim); font-weight:600; font-size:13px; }
+  td:first-child { white-space:nowrap; font-weight:700; }
+  .status li { margin:4px 0; }
+  footer { margin-top:40px; padding:22px 0 34px; border-top:1px solid var(--line); color:var(--dim); font-size:14px; text-align:center; }
+  @media (max-width:640px) {
+    header.hero { padding:28px 0 20px; } .hero h1 { font-size:23px; } .hero .one { font-size:16px; }
+    .pain, .two { grid-template-columns:1fr; }
+    section { padding:26px 0 4px; } section h2 { font-size:19px; }
+    td:first-child { white-space:normal; }
+    .btn { flex:1 1 100%; justify-content:center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">OPEN LAB 作品展示</div>
+    <!-- (a) 作品名稱：暫定，待 Ming 確認 -->
+    <h1 id="title">DEA MAM — 職業籃球隊影像素材 AI 索引系統 <span class="todo">作品名稱暫定・待 Ming 確認</span></h1>
+    <p class="one">輸入「球員＋動作」，直接找到那一球在每一台攝影機的第幾秒——把一整季的多機位比賽素材，變成剪接師查得到的資料庫。</p>
+    <div class="cta">
+      <a class="btn primary" id="tryBtn" href="../web/index.html">▶ 線上體驗</a>
+      <a class="btn" href="#demo">🎬 Demo 影片</a>
+      <a class="btn" href="#arch">🧭 系統架構</a>
+    </div>
+    <p class="lead" style="margin-top:12px">線上體驗是唯讀範例：1 場比賽、49 個事件、115 段片段（FX3／A7R V／ZR 三個機位）。</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- (b) 要解決的問題 -->
+  <section id="problem">
+    <h2><span class="no">01</span>要解決的問題</h2>
+    <p>一支職業籃球隊一季打幾十場比賽，每場有好幾台攝影機同時拍，一場就是數百支素材檔。剪精華、做社群影片時，最常見的需求是「<b>找某一位球員的某一球</b>」——例如某人的三分球、某一次抄截。</p>
+    <div class="pain">
+      <div><b>數十場</b>一季的比賽，素材分散在多顆硬碟</div>
+      <div><b>數百支</b>每場多機位素材，檔名只是流水號</div>
+      <div><b>靠記憶</b>過去只能憑印象、一支一支拖時間軸找</div>
+    </div>
+    <p style="margin-top:12px">更麻煩的是：攝影機錄的是 HEVC 格式，Windows 檔案總管連縮圖都出不來；每台相機的時鐘也不準，同一個瞬間在不同機位的檔案裡位置都不一樣。</p>
+  </section>
+
+  <!-- (c) 系統做了什麼 -->
+  <section id="what">
+    <h2><span class="no">02</span>系統做了什麼</h2>
+    <p class="lead">摘自系統的總覽與生產線技術文件，用一般人看得懂的話說明。</p>
+    <ol class="points">
+      <li><b>每顆素材碟自己帶索引</b>自動掃出每支影片的長度、解析度、編碼、拍攝時間，用顯示卡抽縮圖和九宮格預覽；碟插到哪台電腦，索引就跟到哪台。</li>
+      <li><b>瀏覽器裡的操作台</b>逐層瀏覽、滑過縮圖預覽、直接播放（瀏覽器播不動的格式會即時轉檔），加標籤、評分、備註，把要用的素材收進「收集籃」批次處理。</li>
+      <li><b>比分板辨識＋聯盟比賽紀錄＝球賽事件</b>逐秒讀轉播畫面上的比分板（節次、比賽時鐘、比分），再對上聯盟公布的逐球紀錄（誰得分、誰助攻、誰抄截）。紀錄告訴我們「誰做了什麼」，畫面告訴我們「什麼時候」。</li>
+      <li><b>多機位對時</b>把每一台攝影機的時間對到同一條時間軸，所以每個球賽事件都能直接指到各機位檔案的第幾秒，也能一鍵找「同一時刻的其他機位」。</li>
+      <li><b>訪談逐字稿</b>把受訪片段的語音轉成文字並統一成繁體，講過的話也能搜尋、點一下就跳到那一句。</li>
+      <li><b>跨碟搜尋，同事和手機也能用</b>所有硬碟的索引彙整成一個中央索引，素材上架到公司儲存伺服器後，同事用唯讀版就能查；出門在外也能用手機查。</li>
+      <li><b>直接交給剪接</b>選好的片段可匯出剪接軟體用的時間軸檔（FCPXML）、產生代理檔、複製到收集碟，或一鍵送進 DaVinci Resolve 的媒體池。</li>
+    </ol>
+
+    <figure id="arch">
+      <svg viewBox="0 0 640 900" role="img" aria-labelledby="archTitle archDesc" xmlns="http://www.w3.org/2000/svg">
+        <title id="archTitle">系統架構圖</title>
+        <desc id="archDesc">素材碟經過索引與縮圖，結合比分板辨識與聯盟逐球紀錄產生球賽事件，再由搜尋與操作台使用，最後送進 DaVinci Resolve。素材另外上架到公司儲存伺服器保存與共用。</desc>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path class="g-ah" d="M0,0 L10,5 L0,10 z"/>
+          </marker>
+        </defs>
+        <!-- 1 素材碟 -->
+        <rect class="g-box" x="40" y="20" width="360" height="92" rx="14"/>
+        <text class="g-t" x="220" y="58" text-anchor="middle">素材碟</text>
+        <text class="g-s" x="220" y="86" text-anchor="middle">各機位原始檔（FX3／A7R V／ZR …）</text>
+        <!-- 公司儲存伺服器（旁支） -->
+        <rect class="g-box" x="430" y="20" width="190" height="92" rx="14"/>
+        <text class="g-t" x="525" y="58" text-anchor="middle">公司儲存伺服器</text>
+        <text class="g-s" x="525" y="86" text-anchor="middle">素材上架、共用</text>
+        <path class="g-d" d="M400,66 L428,66" marker-end="url(#ah)"/>
+        <!-- 2 索引／縮圖 -->
+        <path class="g-a" d="M220,112 L220,148" marker-end="url(#ah)"/>
+        <rect class="g-box" x="40" y="150" width="360" height="92" rx="14"/>
+        <text class="g-t" x="220" y="188" text-anchor="middle">索引／縮圖</text>
+        <text class="g-s" x="220" y="216" text-anchor="middle">長度・編碼・拍攝時間・九宮格預覽</text>
+        <!-- 3 兩個來源 -->
+        <path class="g-a" d="M160,242 L160,288" marker-end="url(#ah)"/>
+        <rect class="g-key" x="20" y="290" width="280" height="110" rx="14"/>
+        <text class="g-t" x="160" y="330" text-anchor="middle">比分板辨識</text>
+        <text class="g-s" x="160" y="358" text-anchor="middle">逐秒讀轉播畫面</text>
+        <text class="g-s" x="160" y="380" text-anchor="middle">節次・時鐘・比分 →「什麼時候」</text>
+        <rect class="g-key" x="340" y="290" width="280" height="110" rx="14"/>
+        <text class="g-t" x="480" y="330" text-anchor="middle">聯盟逐球紀錄（PBP）</text>
+        <text class="g-s" x="480" y="358" text-anchor="middle">誰得分・誰助攻・誰抄截</text>
+        <text class="g-s" x="480" y="380" text-anchor="middle">→「誰做了什麼」</text>
+        <!-- 4 球賽事件 -->
+        <path class="g-a" d="M160,400 L160,430 L300,430 L300,456" marker-end="url(#ah)"/>
+        <path class="g-a" d="M480,400 L480,430 L340,430 L340,456" marker-end="url(#ah)"/>
+        <rect class="g-key" x="120" y="458" width="400" height="100" rx="14"/>
+        <text class="g-t" x="320" y="496" text-anchor="middle">球賽事件</text>
+        <text class="g-s" x="320" y="524" text-anchor="middle">每一球對到各機位檔案的第幾秒</text>
+        <text class="g-s" x="320" y="544" text-anchor="middle">（多機位對時）</text>
+        <!-- 5 搜尋／操作台 -->
+        <path class="g-a" d="M320,558 L320,598" marker-end="url(#ah)"/>
+        <rect class="g-box" x="60" y="600" width="520" height="118" rx="14"/>
+        <text class="g-t" x="320" y="640" text-anchor="middle">搜尋／操作台</text>
+        <text class="g-s" x="320" y="668" text-anchor="middle">單碟操作台・跨碟中央索引・同事唯讀版</text>
+        <text class="g-s" x="320" y="692" text-anchor="middle">手機查詢・AI 透過 MCP 查詢</text>
+        <!-- 6 送 Resolve -->
+        <path class="g-a" d="M320,718 L320,758" marker-end="url(#ah)"/>
+        <rect class="g-out" x="140" y="760" width="360" height="100" rx="14"/>
+        <text class="g-t" x="320" y="800" text-anchor="middle">送進剪接</text>
+        <text class="g-s" x="320" y="828" text-anchor="middle">DaVinci Resolve 媒體池・FCPXML・代理檔</text>
+      </svg>
+      <figcaption>系統架構：黃框是這套系統最核心的部分（把「誰做了什麼」和「什麼時候」接起來）。</figcaption>
+    </figure>
+  </section>
+
+  <!-- (d) AI 的角色 -->
+  <section id="ai">
+    <h2><span class="no">03</span>AI 的角色</h2>
+    <div class="two">
+      <div class="card">
+        <h3>開發面：不寫程式的人做出整套系統</h3>
+        <ul>
+          <li>整套系統由<b>不寫程式的影像工作者</b>，用 <b>Claude Code</b> 協作開發。</li>
+          <li>開發者負責定義問題、決定規則、驗收結果；AI 負責寫程式、跑測試、整理文件。</li>
+          <li>這個展示網站本身也是同樣方式做的：資料匯出、影片切片、機敏資訊掃描、自動測試都由 AI 執行，開發者逐輪審核。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>功能面：AI 在系統裡做的事</h3>
+        <ul>
+          <li><b>比分板辨識</b>：逐秒讀轉播畫面上的節次、時鐘與比分，作為對時的錨點。</li>
+          <li><b>語音轉錄</b>：用 WhisperX（Whisper large-v3 模型）把訪談轉成可搜尋的逐字稿。</li>
+          <li><b>MCP 素材庫查詢</b>：透過 MCP（Model Context Protocol），讓 AI 助理直接用一句話查詢素材庫、推送候選片段到操作台。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- (e) 線上體驗 -->
+  <section id="try">
+    <h2><span class="no">04</span>線上體驗</h2>
+    <p>範例資料是 2026-27 例行賽第 2 場 vs 國王：<b>1 場比賽、49 個事件、115 段片段</b>。可以用球員、事件類型、節次搜尋，點卡片播放，多機位的事件可以切換 FX3／A7R V／ZR，切換時會停在同一個比賽瞬間。</p>
+    <div class="cta"><a class="btn primary" href="../web/index.html">▶ 進入線上體驗</a></div>
+  </section>
+
+  <!-- (f) Demo 影片 -->
+  <section id="demo">
+    <h2><span class="no">05</span>Demo 影片</h2>
+    <div class="demo" id="demoBox">
+      <span class="todo">影片連結待補</span>
+      <span>雲端無法展示的部分（比分板辨識、機位對時、送 Resolve）會在影片中實際操作。</span>
+    </div>
+  </section>
+
+  <!-- (g) 程式庫 -->
+  <section id="code">
+    <h2><span class="no">06</span>程式庫</h2>
+    <p><span class="btn placeholder" aria-disabled="true" id="repoBtn">GitHub 連結待補</span>
+       <span class="todo">GitHub 連結待補</span></p>
+  </section>
+
+  <!-- (h) 完成狀況與限制 -->
+  <section id="status">
+    <h2><span class="no">07</span>完成狀況與限制</h2>
+    <ul class="status">
+      <li><b>正式系統已在球隊內部實際使用。</b></li>
+      <li>展示版是<b>唯讀</b>的，只包含 <b>1 場比賽</b>；片段已轉成 720p、每段約 8 秒（事件前 5 秒、後 3 秒，碰到檔頭或檔尾會截短）。</li>
+      <li>雲端上無法展示的部分——<b>比分板辨識、機位對時、送 DaVinci Resolve</b>——以 Demo 影片呈現。</li>
+      <li>展示版只用球團自己拍的機位畫面，不含電視轉播畫面。</li>
+    </ul>
+  </section>
+
+  <!-- (i) 第三方來源 -->
+  <section id="credits">
+    <h2><span class="no">08</span>使用的開源工具與服務</h2>
+    <p class="lead">依程式實際載入的套件與呼叫的外部程式整理。</p>
+    <table>
+      <thead><tr><th>名稱</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td>FFmpeg／FFprobe</td><td>讀取影片資訊、抽縮圖與九宮格、即時轉檔播放、產生代理檔、切展示片段</td></tr>
+        <tr><td>SQLite</td><td>每顆碟的索引與標註資料庫（Python 內建）</td></tr>
+        <tr><td>Python</td><td>整套系統的主要語言</td></tr>
+        <tr><td>Flask、Werkzeug</td><td>操作台、中央索引、寫入服務的網頁後端</td></tr>
+        <tr><td>OpenCV、NumPy</td><td>比分板畫面的影像比對與判讀</td></tr>
+        <tr><td>WhisperX（Whisper large-v3 模型）</td><td>訪談語音轉逐字稿</td></tr>
+        <tr><td>OpenCC</td><td>逐字稿簡繁轉換</td></tr>
+        <tr><td>MCP Python SDK</td><td>讓 AI 助理透過 Model Context Protocol 查詢素材庫</td></tr>
+        <tr><td>httpx</td><td>各服務之間的連線</td></tr>
+        <tr><td>Playwright</td><td>抓取聯盟官網的逐球紀錄</td></tr>
+        <tr><td>gspread、google-auth</td><td>讀取舊賽季的影音資料庫試算表</td></tr>
+        <tr><td>Robocopy（Windows 內建）</td><td>把選好的素材複製到收集碟</td></tr>
+        <tr><td>Node.js、Git</td><td>開發用：檢查前端程式語法、版本管理</td></tr>
+        <tr><td>DaVinci Resolve（腳本介面）</td><td>一鍵把片段送進剪接軟體的媒體池（商用軟體）</td></tr>
+        <tr><td>TPBL 聯盟比賽紀錄</td><td>逐球紀錄（PBP）的資料來源</td></tr>
+        <tr><td>Google 雲端硬碟、Google Apps Script</td><td>索引快照與發佈、手機查詢頁</td></tr>
+        <tr><td>Claude Code／Claude（Anthropic）</td><td>開發協作；AI 助理透過 MCP 查詢素材庫</td></tr>
+      </tbody>
+    </table>
+    <p class="lead" style="margin-top:8px">各項的授權條款 <span class="todo">待上線前逐項核對</span></p>
+  </section>
+
+</main>
+
+<!-- (j) 頁尾 -->
+<footer>
+  <div class="wrap">影像素材版權屬中信特攻籃球隊，僅供本次競賽展示</div>
+</footer>
+
+</body>
+</html>

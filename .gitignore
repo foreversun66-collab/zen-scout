@@ -8,3 +8,5 @@ local/
 *.log
 __pycache__/
 *.bak_*
+# 上線打包結果（tools\build_dist.py 產生）
+dist/

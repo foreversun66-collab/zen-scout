@@ -4,7 +4,8 @@
 類型：IP、UNC 路徑、碟符絕對路徑、uuid、token、帳號、內網主機名、來源檔名。
 內網主機名與帳號的字詞清單放 local/scan_terms.json（不進版控；那個檔自己當然會命中，屬預期）。
 
-web\\ 與 data\\ 底下有任何命中 → 退出碼 2（會公開的東西必須是 0 筆）。
+site\\、web\\、data\\、dist\\ 底下有任何命中 → 退出碼 2（會公開的東西必須是 0 筆）。
+--dir <專案內資料夾> 只掃那一個資料夾（例：--dir dist）。
 用法：py tools\\scan_secrets.py [--out <專案內的檔>]
 """
 import argparse
@@ -16,7 +17,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TERMS = os.path.join(ROOT, "local", "scan_terms.json")
-PUBLIC_DIRS = ("web", "data")
+PUBLIC_DIRS = ("site", "web", "data", "dist")   # 會公開的；dist＝上線打包結果
 SKIP_DIRS = {".git", "__pycache__", "clips", "covers"}   # 影片／封面是二進位，另行處理
 
 _OCT = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
@@ -49,10 +50,22 @@ def load_terms():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", help="結果另存（必須在專案資料夾底下）")
+    ap.add_argument("--dir", help="只掃這個資料夾（專案內）")
     args = ap.parse_args()
     pats = PATTERNS + load_terms()
     hits, nfiles, binaries = [], 0, []
-    for dp, dns, fns in os.walk(ROOT):
+    start = ROOT
+    if args.dir:
+        start = os.path.realpath(os.path.join(ROOT, args.dir))
+        base = os.path.normcase(os.path.realpath(ROOT))
+        try:
+            inside = os.path.commonpath([os.path.normcase(start), base]) == base
+        except ValueError:
+            inside = False
+        if not inside or not os.path.isdir(start) or os.path.normcase(start) == base:
+            print("停止：--dir 必須是專案資料夾底下已存在的子資料夾", file=sys.stderr)
+            sys.exit(2)
+    for dp, dns, fns in os.walk(start):
         dns[:] = sorted(d for d in dns if d not in SKIP_DIRS)
         for fn in sorted(fns):
             p = os.path.join(dp, fn)
