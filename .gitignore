@@ -1,0 +1,9 @@
+# OPEN LAB 展示版：不進版控的東西
+# 切出來的影片與封面（可由 tools\slice_1025.py 重生，而且檔大）
+clips/
+covers/
+# 不公開的本地檔（切片計畫含來源路徑、認碟資料等）
+local/
+*.db
+*.log
+__pycache__/
