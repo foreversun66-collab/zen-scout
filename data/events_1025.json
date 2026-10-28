@@ -29,18 +29,21 @@
     {
      "id": "E011_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E011_FX3.mp4",
      "cover": "covers/E011_FX3.jpg"
     },
     {
      "id": "E011_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E011_A7RV.mp4",
      "cover": "covers/E011_A7RV.jpg"
     },
     {
      "id": "E011_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E011_ZR.mp4",
      "cover": "covers/E011_ZR.jpg"
     }
@@ -62,18 +65,21 @@
     {
      "id": "E020_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E020_FX3.mp4",
      "cover": "covers/E020_FX3.jpg"
     },
     {
      "id": "E020_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E020_A7RV.mp4",
      "cover": "covers/E020_A7RV.jpg"
     },
     {
      "id": "E020_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E020_ZR.mp4",
      "cover": "covers/E020_ZR.jpg"
     }
@@ -95,18 +101,21 @@
     {
      "id": "E042_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E042_FX3.mp4",
      "cover": "covers/E042_FX3.jpg"
     },
     {
      "id": "E042_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E042_A7RV.mp4",
      "cover": "covers/E042_A7RV.jpg"
     },
     {
      "id": "E042_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E042_ZR.mp4",
      "cover": "covers/E042_ZR.jpg"
     }
@@ -128,18 +137,21 @@
     {
      "id": "E044_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E044_FX3.mp4",
      "cover": "covers/E044_FX3.jpg"
     },
     {
      "id": "E044_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E044_A7RV.mp4",
      "cover": "covers/E044_A7RV.jpg"
     },
     {
      "id": "E044_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E044_ZR.mp4",
      "cover": "covers/E044_ZR.jpg"
     }
@@ -161,18 +173,21 @@
     {
      "id": "E046_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E046_FX3.mp4",
      "cover": "covers/E046_FX3.jpg"
     },
     {
      "id": "E046_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E046_A7RV.mp4",
      "cover": "covers/E046_A7RV.jpg"
     },
     {
      "id": "E046_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E046_ZR.mp4",
      "cover": "covers/E046_ZR.jpg"
     }
@@ -194,18 +209,21 @@
     {
      "id": "E059_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E059_FX3.mp4",
      "cover": "covers/E059_FX3.jpg"
     },
     {
      "id": "E059_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E059_A7RV.mp4",
      "cover": "covers/E059_A7RV.jpg"
     },
     {
      "id": "E059_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E059_ZR.mp4",
      "cover": "covers/E059_ZR.jpg"
     }
@@ -227,18 +245,21 @@
     {
      "id": "E080_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E080_FX3.mp4",
      "cover": "covers/E080_FX3.jpg"
     },
     {
      "id": "E080_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E080_A7RV.mp4",
      "cover": "covers/E080_A7RV.jpg"
     },
     {
      "id": "E080_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E080_ZR.mp4",
      "cover": "covers/E080_ZR.jpg"
     }
@@ -260,18 +281,21 @@
     {
      "id": "E082_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E082_FX3.mp4",
      "cover": "covers/E082_FX3.jpg"
     },
     {
      "id": "E082_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E082_A7RV.mp4",
      "cover": "covers/E082_A7RV.jpg"
     },
     {
      "id": "E082_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E082_ZR.mp4",
      "cover": "covers/E082_ZR.jpg"
     }
@@ -293,18 +317,21 @@
     {
      "id": "E101_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E101_FX3.mp4",
      "cover": "covers/E101_FX3.jpg"
     },
     {
      "id": "E101_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E101_A7RV.mp4",
      "cover": "covers/E101_A7RV.jpg"
     },
     {
      "id": "E101_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E101_ZR.mp4",
      "cover": "covers/E101_ZR.jpg"
     }
@@ -326,18 +353,21 @@
     {
      "id": "E123_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E123_FX3.mp4",
      "cover": "covers/E123_FX3.jpg"
     },
     {
      "id": "E123_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E123_A7RV.mp4",
      "cover": "covers/E123_A7RV.jpg"
     },
     {
      "id": "E123_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E123_ZR.mp4",
      "cover": "covers/E123_ZR.jpg"
     }
@@ -359,18 +389,21 @@
     {
      "id": "E129_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E129_FX3.mp4",
      "cover": "covers/E129_FX3.jpg"
     },
     {
      "id": "E129_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E129_A7RV.mp4",
      "cover": "covers/E129_A7RV.jpg"
     },
     {
      "id": "E129_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E129_ZR.mp4",
      "cover": "covers/E129_ZR.jpg"
     }
@@ -392,18 +425,21 @@
     {
      "id": "E134_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E134_FX3.mp4",
      "cover": "covers/E134_FX3.jpg"
     },
     {
      "id": "E134_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E134_A7RV.mp4",
      "cover": "covers/E134_A7RV.jpg"
     },
     {
      "id": "E134_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E134_ZR.mp4",
      "cover": "covers/E134_ZR.jpg"
     }
@@ -425,6 +461,7 @@
     {
      "id": "E160_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E160_FX3.mp4",
      "cover": "covers/E160_FX3.jpg"
     }
@@ -446,6 +483,7 @@
     {
      "id": "E184_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E184_FX3.mp4",
      "cover": "covers/E184_FX3.jpg"
     }
@@ -467,6 +505,7 @@
     {
      "id": "E196_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E196_FX3.mp4",
      "cover": "covers/E196_FX3.jpg"
     }
@@ -488,6 +527,7 @@
     {
      "id": "E204_FX3",
      "camera": "FX3",
+     "t_event": 3.42,
      "video": "clips/E204_FX3.mp4",
      "cover": "covers/E204_FX3.jpg"
     }
@@ -509,6 +549,7 @@
     {
      "id": "E206_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E206_FX3.mp4",
      "cover": "covers/E206_FX3.jpg"
     }
@@ -530,6 +571,7 @@
     {
      "id": "E226_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E226_FX3.mp4",
      "cover": "covers/E226_FX3.jpg"
     }
@@ -551,6 +593,7 @@
     {
      "id": "E228_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E228_FX3.mp4",
      "cover": "covers/E228_FX3.jpg"
     }
@@ -572,12 +615,14 @@
     {
      "id": "E234_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E234_FX3.mp4",
      "cover": "covers/E234_FX3.jpg"
     },
     {
      "id": "E234_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E234_A7RV.mp4",
      "cover": "covers/E234_A7RV.jpg"
     }
@@ -599,12 +644,14 @@
     {
      "id": "E255_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E255_FX3.mp4",
      "cover": "covers/E255_FX3.jpg"
     },
     {
      "id": "E255_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E255_A7RV.mp4",
      "cover": "covers/E255_A7RV.jpg"
     }
@@ -626,12 +673,14 @@
     {
      "id": "E257_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E257_FX3.mp4",
      "cover": "covers/E257_FX3.jpg"
     },
     {
      "id": "E257_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E257_A7RV.mp4",
      "cover": "covers/E257_A7RV.jpg"
     }
@@ -653,6 +702,7 @@
     {
      "id": "E260_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E260_FX3.mp4",
      "cover": "covers/E260_FX3.jpg"
     }
@@ -674,12 +724,14 @@
     {
      "id": "E271_FX3",
      "camera": "FX3",
+     "t_event": 4.53,
      "video": "clips/E271_FX3.mp4",
      "cover": "covers/E271_FX3.jpg"
     },
     {
      "id": "E271_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E271_A7RV.mp4",
      "cover": "covers/E271_A7RV.jpg"
     }
@@ -701,12 +753,14 @@
     {
      "id": "E272_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E272_FX3.mp4",
      "cover": "covers/E272_FX3.jpg"
     },
     {
      "id": "E272_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E272_A7RV.mp4",
      "cover": "covers/E272_A7RV.jpg"
     }
@@ -728,12 +782,14 @@
     {
      "id": "E287_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E287_FX3.mp4",
      "cover": "covers/E287_FX3.jpg"
     },
     {
      "id": "E287_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E287_A7RV.mp4",
      "cover": "covers/E287_A7RV.jpg"
     }
@@ -755,12 +811,14 @@
     {
      "id": "E294_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E294_FX3.mp4",
      "cover": "covers/E294_FX3.jpg"
     },
     {
      "id": "E294_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E294_A7RV.mp4",
      "cover": "covers/E294_A7RV.jpg"
     }
@@ -782,12 +840,14 @@
     {
      "id": "E296_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E296_FX3.mp4",
      "cover": "covers/E296_FX3.jpg"
     },
     {
      "id": "E296_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E296_A7RV.mp4",
      "cover": "covers/E296_A7RV.jpg"
     }
@@ -809,12 +869,14 @@
     {
      "id": "E328_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E328_FX3.mp4",
      "cover": "covers/E328_FX3.jpg"
     },
     {
      "id": "E328_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E328_ZR.mp4",
      "cover": "covers/E328_ZR.jpg"
     }
@@ -836,12 +898,14 @@
     {
      "id": "E330_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E330_FX3.mp4",
      "cover": "covers/E330_FX3.jpg"
     },
     {
      "id": "E330_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E330_ZR.mp4",
      "cover": "covers/E330_ZR.jpg"
     }
@@ -863,12 +927,14 @@
     {
      "id": "E333_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E333_FX3.mp4",
      "cover": "covers/E333_FX3.jpg"
     },
     {
      "id": "E333_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E333_ZR.mp4",
      "cover": "covers/E333_ZR.jpg"
     }
@@ -890,12 +956,14 @@
     {
      "id": "E335_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E335_FX3.mp4",
      "cover": "covers/E335_FX3.jpg"
     },
     {
      "id": "E335_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E335_ZR.mp4",
      "cover": "covers/E335_ZR.jpg"
     }
@@ -917,18 +985,21 @@
     {
      "id": "E408_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E408_FX3.mp4",
      "cover": "covers/E408_FX3.jpg"
     },
     {
      "id": "E408_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E408_A7RV.mp4",
      "cover": "covers/E408_A7RV.jpg"
     },
     {
      "id": "E408_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E408_ZR.mp4",
      "cover": "covers/E408_ZR.jpg"
     }
@@ -950,18 +1021,21 @@
     {
      "id": "E418_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E418_FX3.mp4",
      "cover": "covers/E418_FX3.jpg"
     },
     {
      "id": "E418_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E418_A7RV.mp4",
      "cover": "covers/E418_A7RV.jpg"
     },
     {
      "id": "E418_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E418_ZR.mp4",
      "cover": "covers/E418_ZR.jpg"
     }
@@ -983,18 +1057,21 @@
     {
      "id": "E425_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E425_FX3.mp4",
      "cover": "covers/E425_FX3.jpg"
     },
     {
      "id": "E425_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E425_A7RV.mp4",
      "cover": "covers/E425_A7RV.jpg"
     },
     {
      "id": "E425_ZR",
      "camera": "ZR",
+     "t_event": 1.05,
      "video": "clips/E425_ZR.mp4",
      "cover": "covers/E425_ZR.jpg"
     }
@@ -1016,18 +1093,21 @@
     {
      "id": "E475_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E475_FX3.mp4",
      "cover": "covers/E475_FX3.jpg"
     },
     {
      "id": "E475_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E475_A7RV.mp4",
      "cover": "covers/E475_A7RV.jpg"
     },
     {
      "id": "E475_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E475_ZR.mp4",
      "cover": "covers/E475_ZR.jpg"
     }
@@ -1049,12 +1129,14 @@
     {
      "id": "E503_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E503_FX3.mp4",
      "cover": "covers/E503_FX3.jpg"
     },
     {
      "id": "E503_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E503_ZR.mp4",
      "cover": "covers/E503_ZR.jpg"
     }
@@ -1076,12 +1158,14 @@
     {
      "id": "E534_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E534_FX3.mp4",
      "cover": "covers/E534_FX3.jpg"
     },
     {
      "id": "E534_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E534_ZR.mp4",
      "cover": "covers/E534_ZR.jpg"
     }
@@ -1103,12 +1187,14 @@
     {
      "id": "E536_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E536_FX3.mp4",
      "cover": "covers/E536_FX3.jpg"
     },
     {
      "id": "E536_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E536_ZR.mp4",
      "cover": "covers/E536_ZR.jpg"
     }
@@ -1130,12 +1216,14 @@
     {
      "id": "E541_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E541_FX3.mp4",
      "cover": "covers/E541_FX3.jpg"
     },
     {
      "id": "E541_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E541_ZR.mp4",
      "cover": "covers/E541_ZR.jpg"
     }
@@ -1157,18 +1245,21 @@
     {
      "id": "E565_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E565_FX3.mp4",
      "cover": "covers/E565_FX3.jpg"
     },
     {
      "id": "E565_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E565_A7RV.mp4",
      "cover": "covers/E565_A7RV.jpg"
     },
     {
      "id": "E565_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E565_ZR.mp4",
      "cover": "covers/E565_ZR.jpg"
     }
@@ -1190,18 +1281,21 @@
     {
      "id": "E579_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E579_FX3.mp4",
      "cover": "covers/E579_FX3.jpg"
     },
     {
      "id": "E579_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E579_A7RV.mp4",
      "cover": "covers/E579_A7RV.jpg"
     },
     {
      "id": "E579_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E579_ZR.mp4",
      "cover": "covers/E579_ZR.jpg"
     }
@@ -1223,18 +1317,21 @@
     {
      "id": "E581_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E581_FX3.mp4",
      "cover": "covers/E581_FX3.jpg"
     },
     {
      "id": "E581_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E581_A7RV.mp4",
      "cover": "covers/E581_A7RV.jpg"
     },
     {
      "id": "E581_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E581_ZR.mp4",
      "cover": "covers/E581_ZR.jpg"
     }
@@ -1256,18 +1353,21 @@
     {
      "id": "E594_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E594_FX3.mp4",
      "cover": "covers/E594_FX3.jpg"
     },
     {
      "id": "E594_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E594_A7RV.mp4",
      "cover": "covers/E594_A7RV.jpg"
     },
     {
      "id": "E594_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E594_ZR.mp4",
      "cover": "covers/E594_ZR.jpg"
     }
@@ -1289,18 +1389,21 @@
     {
      "id": "E596_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E596_FX3.mp4",
      "cover": "covers/E596_FX3.jpg"
     },
     {
      "id": "E596_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E596_A7RV.mp4",
      "cover": "covers/E596_A7RV.jpg"
     },
     {
      "id": "E596_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E596_ZR.mp4",
      "cover": "covers/E596_ZR.jpg"
     }
@@ -1322,18 +1425,21 @@
     {
      "id": "E597_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E597_FX3.mp4",
      "cover": "covers/E597_FX3.jpg"
     },
     {
      "id": "E597_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E597_A7RV.mp4",
      "cover": "covers/E597_A7RV.jpg"
     },
     {
      "id": "E597_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E597_ZR.mp4",
      "cover": "covers/E597_ZR.jpg"
     }
@@ -1355,18 +1461,21 @@
     {
      "id": "E644_FX3",
      "camera": "FX3",
+     "t_event": 4.85,
      "video": "clips/E644_FX3.mp4",
      "cover": "covers/E644_FX3.jpg"
     },
     {
      "id": "E644_A7RV",
      "camera": "A7R V",
+     "t_event": 4.42,
      "video": "clips/E644_A7RV.mp4",
      "cover": "covers/E644_A7RV.jpg"
     },
     {
      "id": "E644_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E644_ZR.mp4",
      "cover": "covers/E644_ZR.jpg"
     }
@@ -1388,18 +1497,21 @@
     {
      "id": "E654_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E654_FX3.mp4",
      "cover": "covers/E654_FX3.jpg"
     },
     {
      "id": "E654_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E654_A7RV.mp4",
      "cover": "covers/E654_A7RV.jpg"
     },
     {
      "id": "E654_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E654_ZR.mp4",
      "cover": "covers/E654_ZR.jpg"
     }
@@ -1421,18 +1533,21 @@
     {
      "id": "E656_FX3",
      "camera": "FX3",
+     "t_event": 5.0,
      "video": "clips/E656_FX3.mp4",
      "cover": "covers/E656_FX3.jpg"
     },
     {
      "id": "E656_A7RV",
      "camera": "A7R V",
+     "t_event": 5.0,
      "video": "clips/E656_A7RV.mp4",
      "cover": "covers/E656_A7RV.jpg"
     },
     {
      "id": "E656_ZR",
      "camera": "ZR",
+     "t_event": 5.0,
      "video": "clips/E656_ZR.mp4",
      "cover": "covers/E656_ZR.jpg"
     }

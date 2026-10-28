@@ -84,8 +84,12 @@ def main():
     print("\n".join(lines))
     if args.out:
         o = os.path.realpath(os.path.abspath(args.out))
-        if os.path.commonpath([os.path.normcase(o), os.path.normcase(os.path.realpath(ROOT))]) \
-                != os.path.normcase(os.path.realpath(ROOT)):
+        r = os.path.normcase(os.path.realpath(ROOT))
+        try:
+            ok = os.path.commonpath([os.path.normcase(o), r]) == r
+        except ValueError:      # 不同碟符 → 不在專案底下
+            ok = False
+        if not ok:
             print("停止：--out 不在專案資料夾底下", file=sys.stderr)
             sys.exit(2)
         with io.open(o, "w", encoding="utf-8", newline="\n") as f:

@@ -3,10 +3,12 @@
 預設**乾跑**：只認碟（認得到的話）、組好每一條 ffmpeg 指令印出來、算預估總容量；不執行 ffmpeg 切片。
 加 --apply 才真的切。
 
-認碟：Windows 卷標＝local/drive_expect.json 的 volume_label，而且該碟 _MAM/drive_id.json 的
-drive_uuid＝drive_expect.json 的 drive_uuid（兩個都對才算）。不寫死碟符。
-  乾跑：認不到碟 → 印「未接碟，跳過」，指令裡的來源用 <DEA_S2627> 代位，照樣驗 csv 與組指令。
+認碟：--drive <卷標> 指定來源碟；卷標必須在 local/drive_expect.json 的白名單（卷標 → uuid）裡，
+Windows 卷標相符，而且該碟 _MAM/drive_id.json 的 drive_uuid＝白名單上那個 uuid（都對才算）。不寫死碟符。
+  白名單外的卷標 → 一律停（乾跑也停）。
+  乾跑：認不到碟 → 印「未接碟，跳過」，指令裡的來源用 <卷標> 代位，照樣驗 csv 與組指令。
   --apply：認不到碟、或 uuid 不符 → 停。
+試編：--only <片段編號,…> 只處理指定的片段；--out-dir <專案內資料夾> 改輸出位置（底下一樣是 clips\、covers\）。
 
 輸出（一律在專案資料夾底下，否則停）：
   clips/<片段編號>.mp4   1280x720、H.264 8-bit 4:2:0、AAC 雙聲道、faststart、去掉來源中繼資料
@@ -14,10 +16,11 @@ drive_uuid＝drive_expect.json 的 drive_uuid（兩個都對才算）。不寫�
 來源碟只讀（ffmpeg 只當輸入讀）。已存在的輸出不覆蓋（-n）。
 
 用法：
-  py tools\\slice_1025.py                       乾跑
-  py tools\\slice_1025.py --encoder cpu         乾跑、指定 CPU 編碼
-  py tools\\slice_1025.py --apply               真的切（預設 NVIDIA 顯卡編碼，不可用時自動改 CPU）
+  py tools\\slice_1025.py --drive DEA_SSD1                  乾跑
+  py tools\\slice_1025.py --drive DEA_SSD1 --encoder cpu    乾跑、指定 CPU 編碼
+  py tools\\slice_1025.py --drive DEA_SSD1 --apply          真的切（預設 NVIDIA 顯卡編碼，不可用時自動改 CPU）
 """
+import time
 import argparse
 import csv
 import ctypes
@@ -43,7 +46,9 @@ V_MAXRATE_K = 4500      # 上限
 A_BITRATE_K = 128
 COVER_EST_KB = 60       # 封面每張估計（640 寬 jpg）
 
-VF = ("scale=1280:720:force_original_aspect_ratio=decrease,"
+# out_range=tv：ZR 的來源是全範圍（yuvj420p），不轉的話輸出也會是全範圍、被標成 yuvj420p
+#（第 2 輪試編實測）；網頁播放一律用標準範圍 yuv420p。
+VF = ("scale=1280:720:force_original_aspect_ratio=decrease:out_range=tv,"
       "pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps={fps},format=yuv420p")
 ENC_ARGS = {
     "nvidia": ["-c:v", "h264_nvenc", "-preset", "p5", "-tune", "hq", "-rc", "vbr", "-cq", "23",
@@ -53,7 +58,6 @@ ENC_ARGS = {
             "-maxrate", f"{V_MAXRATE_K}k", "-bufsize", f"{V_MAXRATE_K * 2}k",
             "-profile:v", "high", "-pix_fmt", "yuv420p"],
 }
-SRC_PLACEHOLDER = "<DEA_S2627>"
 
 
 def die(msg):
@@ -64,7 +68,10 @@ def die(msg):
 def inside_root(p):
     p = os.path.normcase(os.path.realpath(p))
     r = os.path.normcase(os.path.realpath(ROOT))
-    return os.path.commonpath([p, r]) == r
+    try:
+        return os.path.commonpath([p, r]) == r
+    except ValueError:          # 不同碟符（來源碟與專案在不同顆碟）→ 當然不在專案底下
+        return False
 
 
 def must_inside_root(p):
@@ -115,12 +122,22 @@ def volume_label(root):
     return buf.value if ok else None
 
 
-def find_drive(expect):
+def whitelist_uuid(expect, label):
+    """白名單：local/drive_expect.json 的 drives {卷標: uuid}。白名單外 → 停（不論乾跑或 --apply）。"""
+    wl = expect.get("drives") or {}
+    if not isinstance(wl, dict) or not wl:
+        die("drive_expect.json 沒有 drives 白名單")
+    if label not in wl:
+        die(f"卷標 {label!r} 不在白名單（{'、'.join(sorted(wl))}）")
+    return str(wl[label])
+
+
+def find_drive(label, want_uuid):
     """回 (碟根 或 None, 說明)。只看本機固定碟與可移除碟（不碰網路碟）；
     先比 Windows 卷標，卷標對了才去讀那一顆的 _MAM/drive_id.json。"""
     if os.name != "nt":
         return None, "不是 Windows，不認碟"
-    want_label = expect["volume_label"]
+    want_label = label
     hits = []
     for L in string.ascii_uppercase:
         root = f"{L}:\\"
@@ -132,12 +149,12 @@ def find_drive(expect):
         return None, f"未接碟（沒有卷標 {want_label} 的本機碟）"
     if len(hits) > 1:
         return None, f"卷標 {want_label} 有 {len(hits)} 顆，不猜"
-    return verify_root(hits[0], expect)
+    return verify_root(hits[0], want_uuid)
 
 
-def verify_root(root, expect):
+def verify_root(root, want_uuid):
     """卷標已對上的那顆：讀 <碟根>/_MAM/drive_id.json，uuid 要相符。回 (碟根 或 None, 說明)。"""
-    want_uuid = expect["drive_uuid"].lower()
+    want_uuid = want_uuid.lower()
     p = os.path.join(root, "_MAM", "drive_id.json")
     try:
         with io.open(p, encoding="utf-8-sig") as f:
@@ -175,17 +192,17 @@ def pick_encoder(ffmpeg, want, probe):
 
 
 # ---------------- 指令 ----------------
-def build_cmds(ffmpeg, enc, fps, src_root, r):
+def build_cmds(ffmpeg, enc, fps, src_root, label, out_root, r):
     rel = r["src_rel_path"].replace("/", os.sep)
-    src = os.path.join(src_root, rel) if src_root else os.path.join(SRC_PLACEHOLDER, rel)
-    out_v = must_inside_root(os.path.join(CLIPS_DIR, r["clip_id"] + ".mp4"))
-    out_c = must_inside_root(os.path.join(COVERS_DIR, r["clip_id"] + ".jpg"))
+    src = os.path.join(src_root, rel) if src_root else os.path.join(f"<{label}>", rel)
+    out_v = must_inside_root(os.path.join(out_root, "clips", r["clip_id"] + ".mp4"))
+    out_c = must_inside_root(os.path.join(out_root, "covers", r["clip_id"] + ".jpg"))
     exe = ffmpeg or "ffmpeg"
     v = [exe, "-hide_banner", "-nostdin", "-n",
          "-ss", f"{r['_in']:.3f}", "-i", src, "-t", f"{r['_dur']:.3f}",
          "-map", "0:v:0", "-map", "0:a:0?", "-dn", "-sn",
          "-map_metadata", "-1", "-map_chapters", "-1",
-         "-vf", VF.format(fps=fps)] + ENC_ARGS[enc] + [
+         "-vf", VF.format(fps=fps), "-color_range", "tv"] + ENC_ARGS[enc] + [
          "-c:a", "aac", "-b:a", f"{A_BITRATE_K}k", "-ac", "2", "-ar", "48000",
          "-movflags", "+faststart", out_v]
     c = [exe, "-hide_banner", "-nostdin", "-n",
@@ -200,7 +217,11 @@ def main():
     ap.add_argument("--encoder", choices=["cpu", "nvidia"], default="nvidia")
     ap.add_argument("--fps", default="30000/1001", help="輸出影格率（預設 29.97）")
     ap.add_argument("--log", help="乾跑輸出另存一份（必須在專案資料夾底下）")
+    ap.add_argument("--drive", required=True, help="來源碟卷標（必須在 drive_expect.json 白名單內）")
+    ap.add_argument("--only", help="只處理這些片段編號（逗號分隔；試編用）")
+    ap.add_argument("--out-dir", help="輸出根（必須在專案資料夾底下；預設＝專案根）")
     args = ap.parse_args()
+    out_root = must_inside_root(os.path.abspath(args.out_dir)) if args.out_dir else ROOT
 
     lines = []
 
@@ -209,6 +230,14 @@ def main():
         lines.append(s)
 
     rows = load_plan()
+    if args.only:
+        want = [s.strip() for s in args.only.split(",") if s.strip()]
+        known = {r["clip_id"] for r in rows}
+        bad = [w for w in want if w not in known]
+        if bad:
+            die(f"--only 有計畫裡沒有的片段編號：{bad}")
+        rows = [r for r in rows if r["clip_id"] in want]
+        say(f"只處理 {len(rows)} 段：{'、'.join(r['clip_id'] for r in rows)}")
     ntr = sum(1 for r in rows if r["truncated"] == "Y")
     total = sum(r["_dur"] for r in rows)
     say(f"切片計畫：{len(rows)} 列、截短 {ntr} 列、總長 {total:.1f} 秒")
@@ -217,13 +246,16 @@ def main():
         die(f"找不到認碟設定 {EXPECT}")
     with io.open(EXPECT, encoding="utf-8-sig") as f:
         expect = json.load(f)
-    src_root, why = find_drive(expect)
+    want_uuid = whitelist_uuid(expect, args.drive)
+    src_root, why = find_drive(args.drive, want_uuid)
     if src_root:
-        say(f"認碟：{why}")
+        say(f"認碟：{args.drive} → {src_root}（{why}；uuid {want_uuid[:8]}…）")
     elif args.apply:
         die(f"認碟失敗：{why}")
+    elif why.startswith("未接碟"):
+        say(f"認碟：{why} → 未接碟，跳過（指令來源以 <{args.drive}> 代位）")
     else:
-        say(f"認碟：{why} → 未接碟，跳過（指令來源以 {SRC_PLACEHOLDER} 代位）")
+        die(f"認碟失敗：{why}")       # 碟在、但 uuid 不符／讀不到 → 乾跑也停
     if src_root and inside_root(src_root):
         die("來源碟在專案資料夾底下？不合理，停")
 
@@ -233,7 +265,7 @@ def main():
 
     cmds = []
     for r in rows:
-        src, v, c = build_cmds(ffmpeg, enc, args.fps, src_root, r)
+        src, v, c = build_cmds(ffmpeg, enc, args.fps, src_root, args.drive, out_root, r)
         if src_root and not os.path.isfile(src):
             die(f"來源檔不在碟上：{r['src_rel_path']}")
         cmds.append((r, v, c))
@@ -259,10 +291,12 @@ def main():
 
     if not ffmpeg:
         die("找不到 ffmpeg")
-    os.makedirs(must_inside_root(CLIPS_DIR), exist_ok=True)
-    os.makedirs(must_inside_root(COVERS_DIR), exist_ok=True)
+    os.makedirs(must_inside_root(os.path.join(out_root, "clips")), exist_ok=True)
+    os.makedirs(must_inside_root(os.path.join(out_root, "covers")), exist_ok=True)
     made = skipped = failed = 0
+    t_all = time.time()
     for r, v, c in cmds:
+        t0 = time.time()
         for cmd in (v, c):
             out = cmd[-1]
             must_inside_root(out)
@@ -278,8 +312,8 @@ def main():
                 print(f"失敗 [{r['clip_id']}] {os.path.basename(out)}：{last}", file=sys.stderr)
             else:
                 made += 1
-        print(f"[{r['clip_id']}] 完成")
-    print(f"產出 {made}、已存在略過 {skipped}、失敗 {failed}")
+        print(f"[{r['clip_id']}] 完成 {time.time() - t0:.1f} 秒", flush=True)
+    print(f"產出 {made}、已存在略過 {skipped}、失敗 {failed}；總耗時 {time.time() - t_all:.1f} 秒")
     sys.exit(1 if failed else 0)
 
 

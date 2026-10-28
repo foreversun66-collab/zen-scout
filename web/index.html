@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,">
+<title>OPEN LAB 展示版｜球賽事件搜尋</title>
+<style>
+  :root { --bg:#0f1115; --panel:#181b22; --line:#2a2f3a; --fg:#e8eaf0; --dim:#9aa3b2; --acc:#f5c518; --acc2:#3b82f6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif; }
+  header { padding:16px 20px 8px; }
+  header h1 { margin:0; font-size:20px; }
+  header .sub { color:var(--dim); font-size:13px; margin-top:4px; }
+  .bar { position:sticky; top:0; z-index:5; background:var(--bg); padding:10px 20px; display:flex; flex-wrap:wrap; gap:8px;
+         border-bottom:1px solid var(--line); }
+  .bar input, .bar select { background:var(--panel); color:var(--fg); border:1px solid var(--line); border-radius:8px;
+         padding:9px 10px; font-size:15px; }
+  .bar input { flex:1 1 220px; min-width:0; }
+  .bar select { flex:0 1 auto; }
+  .bar button { background:transparent; color:var(--dim); border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:14px; cursor:pointer; }
+  #count { padding:10px 20px 0; color:var(--dim); font-size:14px; }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; padding:12px 20px 24px; }
+  /* <button> 預設把內容垂直置中 → 沒有助攻行的卡片會整塊往下偏；改成由上往下排 */
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; overflow:hidden; cursor:pointer;
+          text-align:left; color:inherit; font:inherit; padding:0; display:flex; flex-direction:column;
+          justify-content:flex-start; align-items:stretch; }
+  .card:hover, .card:focus-visible { border-color:var(--acc); outline:none; }
+  .card .cover { position:relative; aspect-ratio:16/9; background:#000; }
+  .card img { width:100%; height:100%; object-fit:cover; display:block; }
+  .card .cams { position:absolute; right:6px; bottom:6px; background:rgba(0,0,0,.7); font-size:12px; padding:2px 7px; border-radius:10px; }
+  .card .body { padding:9px 11px 11px; }
+  .card .type { display:inline-block; font-size:12px; font-weight:700; color:#111; background:var(--acc); border-radius:4px; padding:1px 6px; }
+  .card .player { font-size:16px; font-weight:700; margin:6px 0 2px; }
+  .card .assist { font-size:13px; color:var(--dim); }
+  .card .meta { font-size:13px; color:var(--dim); margin-top:4px; }
+  .card .score { font-size:13px; color:var(--dim); white-space:nowrap; }
+  .empty { color:var(--dim); padding:30px 20px; }
+  footer { color:var(--dim); font-size:13px; text-align:center; padding:18px 20px 28px; border-top:1px solid var(--line); }
+  /* 播放視窗 */
+  #modal { position:fixed; inset:0; background:rgba(0,0,0,.85); display:none; align-items:center; justify-content:center; z-index:20; padding:16px; }
+  #modal.open { display:flex; }
+  .player-box { width:min(960px,100%); background:var(--panel); border-radius:12px; overflow:hidden; border:1px solid var(--line); }
+  .player-box video { width:100%; aspect-ratio:16/9; display:block; background:#000; }
+  .player-head { display:flex; align-items:center; gap:10px; padding:10px 12px; flex-wrap:wrap; }
+  .player-head .title { font-weight:700; flex:1 1 auto; }
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; }
+  .tabs button { background:transparent; color:var(--fg); border:1px solid var(--line); border-radius:16px; padding:5px 12px; font-size:14px; cursor:pointer; }
+  .tabs button.on { background:var(--acc2); border-color:var(--acc2); }
+  .player-foot { display:flex; gap:8px; padding:8px 12px 12px; flex-wrap:wrap; color:var(--dim); font-size:13px; align-items:center; }
+  .player-foot button, .close { background:transparent; color:var(--fg); border:1px solid var(--line); border-radius:8px; padding:6px 10px; font-size:13px; cursor:pointer; }
+  @media (max-width:560px) {
+    header { padding:12px 14px 6px; } header h1 { font-size:17px; }
+    .bar { padding:8px 14px; } .bar select { flex:1 1 30%; }
+    #grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding:10px 14px 20px; }
+    .card .player { font-size:15px; }
+    #modal { padding:0; align-items:flex-start; }
+    .player-box { border-radius:0; border:none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>OPEN LAB 展示版｜球賽事件搜尋</h1>
+  <div class="sub" id="gameTitle">載入中…</div>
+</header>
+<div class="bar">
+  <input id="q" type="search" placeholder="搜尋球員、事件類型、節次、時間…" autocomplete="off" aria-label="關鍵字">
+  <select id="fType" aria-label="事件類型"><option value="">全部類型</option></select>
+  <select id="fPlayer" aria-label="球員"><option value="">全部球員</option></select>
+  <select id="fPeriod" aria-label="節次"><option value="">全部節次</option></select>
+  <button id="reset" type="button">清除</button>
+</div>
+<div id="count"></div>
+<main id="grid" aria-live="polite"></main>
+<footer>範例資料：1 場比賽、49 個事件；展示版唯讀</footer>
+
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+  <div class="player-box">
+    <div class="player-head">
+      <div class="title" id="pTitle"></div>
+      <div class="tabs" id="pTabs"></div>
+      <button class="close" id="pClose" type="button" aria-label="關閉">✕ 關閉</button>
+    </div>
+    <video id="pVideo" controls playsinline preload="metadata"></video>
+    <div class="player-foot">
+      <button id="pJump" type="button">⏱ 跳到事件瞬間</button>
+      <span id="pInfo"></span>
+    </div>
+  </div>
+</div>
+
+<script src="search.js"></script>
+<script>
+(function () {
+  'use strict';
+  var BASE = '../';                       // 資料與影片在網頁資料夾的上一層（data/、clips/、covers/）
+  var S = window.OpenLabSearch;
+  var DATA = null, cur = null, curClip = null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function fill(sel, values) {
+    values.forEach(function (v) { var o = el('option', null, v); o.value = v; sel.appendChild(o); });
+  }
+  function scoreText(e) {
+    if (!e.score) return '';
+    return '特攻 ' + e.score.dea + '：' + e.score.opp + ' ' + (DATA.game.opponent || '對手');
+  }
+
+  function render() {
+    var r = S.searchEvents(DATA, { q: $('q').value, action: $('fType').value, player: $('fPlayer').value,
+                                   period: $('fPeriod').value, limit: 300 });
+    var g = $('grid');
+    g.textContent = '';
+    $('count').textContent = '共 ' + r.total + ' 個事件';
+    if (!r.total) { g.appendChild(el('div', 'empty', '沒有符合的事件，試試換個關鍵字或清除篩選。')); return; }
+    r.items.forEach(function (e) {
+      var c = el('button', 'card'); c.type = 'button'; c.dataset.id = e.id;
+      var cv = el('div', 'cover');
+      var img = el('img'); img.loading = 'lazy'; img.alt = e.player + ' ' + e.type;
+      img.src = BASE + e.clips[0].cover;
+      cv.appendChild(img);
+      cv.appendChild(el('span', 'cams', e.clips.length + ' 機位'));
+      c.appendChild(cv);
+      var b = el('div', 'body');
+      b.appendChild(el('span', 'type', e.type));
+      b.appendChild(el('div', 'player', e.player));
+      if (e.assist) b.appendChild(el('div', 'assist', e.assist + ' 助攻'));
+      b.appendChild(el('div', 'meta', e.period + '　' + e.clock));
+      if (e.score) b.appendChild(el('div', 'score', scoreText(e)));
+      c.appendChild(b);
+      c.addEventListener('click', function () { openEvent(e); });
+      g.appendChild(c);
+    });
+  }
+
+  function openEvent(e) {
+    cur = e;
+    $('pTitle').textContent = e.period + ' ' + e.clock + '｜' + S.eventTitle(e);
+    var tabs = $('pTabs'); tabs.textContent = '';
+    e.clips.forEach(function (c) {
+      var b = el('button', null, c.camera); b.type = 'button'; b.dataset.id = c.id;
+      b.addEventListener('click', function () { playClip(c, true); });
+      tabs.appendChild(b);
+    });
+    $('modal').classList.add('open');
+    playClip(e.clips[0], false);
+  }
+
+  // 切換機位：保持「相對事件瞬間」的同一時刻（各機位片段的起點不一定相同，截短的片段事件瞬間不在第 5 秒）
+  function playClip(c, keepTime) {
+    var v = $('pVideo');
+    var rel = null;
+    if (keepTime && curClip && !isNaN(v.currentTime)) rel = v.currentTime - (curClip.t_event || 0);
+    curClip = c;
+    Array.prototype.forEach.call($('pTabs').children, function (b) { b.classList.toggle('on', b.dataset.id === c.id); });
+    $('pInfo').textContent = '機位 ' + c.camera + (cur.clips.length > 1 ? '（共 ' + cur.clips.length + ' 台，可切換）' : '');
+    v.poster = BASE + c.cover;
+    v.src = BASE + c.video;
+    v.onloadedmetadata = function () {
+      var t = rel == null ? 0 : (c.t_event || 0) + rel;
+      if (t > 0) v.currentTime = Math.max(0, Math.min(t, v.duration - 0.05));
+      v.play().catch(function () {});
+    };
+  }
+
+  function closeModal() {
+    var v = $('pVideo');
+    v.pause(); v.removeAttribute('src'); v.load();
+    $('modal').classList.remove('open');
+    cur = curClip = null;
+  }
+
+  $('pClose').addEventListener('click', closeModal);
+  $('modal').addEventListener('click', function (ev) { if (ev.target === $('modal')) closeModal(); });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && cur) closeModal(); });
+  $('pJump').addEventListener('click', function () {
+    var v = $('pVideo'); if (!curClip) return;
+    v.currentTime = curClip.t_event || 0; v.play().catch(function () {});
+  });
+  ['q', 'fType', 'fPlayer', 'fPeriod'].forEach(function (id) {
+    $(id).addEventListener(id === 'q' ? 'input' : 'change', render);
+  });
+  $('reset').addEventListener('click', function () {
+    $('q').value = ''; $('fType').value = ''; $('fPlayer').value = ''; $('fPeriod').value = ''; render();
+  });
+
+  fetch(BASE + 'data/events_1025.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) {
+      DATA = d;
+      var m = S.getMeta(d);
+      $('gameTitle').textContent = d.game.title + '（' + d.game.date + '）｜機位 ' + d.cameras.join('／');
+      fill($('fType'), m.actions); fill($('fPlayer'), m.players); fill($('fPeriod'), m.periods);
+      render();
+    })
+    .catch(function (err) {
+      $('gameTitle').textContent = '資料載入失敗：' + err.message;
+    });
+})();
+</script>
+</body>
+</html>

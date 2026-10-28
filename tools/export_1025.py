@@ -44,7 +44,10 @@ def die(msg):
 def inside_root(p):
     p = os.path.normcase(os.path.realpath(p))
     r = os.path.normcase(os.path.realpath(ROOT))
-    return os.path.commonpath([p, r]) == r
+    try:
+        return os.path.commonpath([p, r]) == r
+    except ValueError:          # 不同碟符 → 不在專案底下
+        return False
 
 
 def ro(path):
@@ -133,11 +136,12 @@ def main():
             rel, off = by_ev[row][cam]
             name, suffix, _ = CAMS[cam]
             cid = f"{eid}_{suffix}"
-            item["clips"].append({"id": cid, "camera": name,
-                                  "video": f"clips/{cid}.mp4", "cover": f"covers/{cid}.jpg"})
             d = dur[rel]
             tin = max(0.0, off - PRE_SEC)
             tout = min(d, off + POST_SEC)
+            # t_event：事件瞬間在片段裡的第幾秒（一般＝5；截在檔頭的會比較早）。網頁切換機位時對齊用。
+            item["clips"].append({"id": cid, "camera": name, "t_event": round(off - tin, 3),
+                                  "video": f"clips/{cid}.mp4", "cover": f"covers/{cid}.jpg"})
             trunc = (off - PRE_SEC < 0) or (off + POST_SEC > d)
             plan.append({
                 "clip_id": cid, "src_rel_path": rel, "anchor_sec": f"{off:.3f}",

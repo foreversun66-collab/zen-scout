@@ -7,3 +7,4 @@ local/
 *.db
 *.log
 __pycache__/
+*.bak_*
