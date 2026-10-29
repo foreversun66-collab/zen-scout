@@ -40,13 +40,14 @@ MAX_BYTES = 25 * 1024 * 1024
 BAD_TOP = {"local", "tools", ".git"}
 BAD_EXT = (".db", ".log", ".csv", ".db-wal", ".db-shm", ".py", ".pyc")
 COPYRIGHT = "影像素材版權屬中信特攻籃球隊，僅供本次競賽展示"
+PRODUCT = "ZEN Scout 幀探"
 HEADERS = "/*\n  X-Robots-Tag: noindex, nofollow\n"
 ROOT_INDEX = """<!DOCTYPE html>
 <html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
 <meta http-equiv="refresh" content="0; url=site/index.html">
 <link rel="icon" href="data:,">
-<title>ZEN 幀探</title></head>
+<title>ZEN Scout 幀探</title></head>
 <body><p><a href="site/index.html">前往作品首頁</a></p></body></html>
 """
 
@@ -214,8 +215,9 @@ def main():
                 bad.append("_headers 內容不對（要對所有路徑加 X-Robots-Tag: noindex, nofollow）")
     except OSError:
         bad.append("dist 沒有 _headers")
-    # 品牌檢查（第 4 輪改名 ZEN 幀探）：文字檔裡「DEA」不分大小寫 0 筆；「中信特攻」只能在版權聲明那一句
-    n_dea = n_ctbc = n_ctbc_ok = 0
+    # 品牌檢查（第 4 輪改名 ZEN Scout 幀探）：文字檔裡「DEA」不分大小寫 0 筆；「中信特攻」只能在版權聲明那一句
+    #   另外：作品名稱一律寫「ZEN Scout 幀探」；不含 Scout 的舊寫法「ZEN 幀探」0 筆
+    n_dea = n_ctbc = n_ctbc_ok = n_old = n_new = 0
     for rel, _ in allf:
         if rel.endswith((".mp4", ".jpg")):
             continue
@@ -227,9 +229,17 @@ def main():
         n_dea += k
         n_ctbc += txt.count("中信特攻")
         n_ctbc_ok += txt.count(COPYRIGHT)
+        o = len(re.findall(r"ZEN\s*幀探", txt))
+        if o:
+            bad.append(f"品牌檢查：{rel} 有 {o} 處舊寫法「ZEN 幀探」")
+        n_old += o
+        n_new += txt.count(PRODUCT)
     if n_ctbc != n_ctbc_ok or n_ctbc_ok < 1:
         bad.append(f"品牌檢查：「中信特攻」出現 {n_ctbc} 次，其中在版權聲明裡 {n_ctbc_ok} 次")
-    print(f"品牌檢查：DEA {n_dea} 筆；「中信特攻」{n_ctbc} 次（版權聲明 {n_ctbc_ok} 次）")
+    if n_new < 1:
+        bad.append(f"品牌檢查：找不到作品名稱「{PRODUCT}」")
+    print(f"品牌檢查：DEA {n_dea} 筆；「中信特攻」{n_ctbc} 次（版權聲明 {n_ctbc_ok} 次）；"
+          f"「{PRODUCT}」{n_new} 處、舊寫法「ZEN 幀探」{n_old} 處")
     total = sum(s for _, s in allf)
     big = max(allf, key=lambda x: x[1])
     nf = len(allf)
