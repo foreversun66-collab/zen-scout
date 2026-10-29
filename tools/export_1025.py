@@ -127,7 +127,8 @@ def main():
             # 顯示用時鐘＝畫面時鐘優先、沒有才用 PBP 時鐘（與中央索引 snapshot_tool 的 game_rows 同一規則）
             "clock": sclock or pclock,
             "pbp_clock": pclock,
-            "score": None if dea is None or opp is None else {"dea": dea, "opp": opp},
+            # 比分欄：team＝我方、opp＝對手（公開檔不出現隊名縮寫，第 4 輪改名）
+            "score": None if dea is None or opp is None else {"team": dea, "opp": opp},
             "clips": [],
         }
         for cam in CAM_ORDER:

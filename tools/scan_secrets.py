@@ -18,7 +18,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TERMS = os.path.join(ROOT, "local", "scan_terms.json")
 PUBLIC_DIRS = ("site", "web", "data", "dist")   # 會公開的；dist＝上線打包結果
-SKIP_DIRS = {".git", "__pycache__", "clips", "covers"}   # 影片／封面是二進位，另行處理
+SKIP_DIRS = {".git", "__pycache__", "clips", "covers", "node_modules", ".wrangler", "_wrangler_cfg"}   # _wrangler_cfg：Cloudflare 登入資料，掃描工具一律不讀   # 影片／封面是二進位，另行處理
 
 _OCT = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 PATTERNS = [

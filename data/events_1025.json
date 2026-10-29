@@ -22,7 +22,7 @@
    "clock": "11:41",
    "pbp_clock": "11:41",
    "score": {
-    "dea": 3,
+    "team": 3,
     "opp": 0
    },
    "clips": [
@@ -58,7 +58,7 @@
    "clock": "10:19",
    "pbp_clock": "10:19",
    "score": {
-    "dea": 5,
+    "team": 5,
     "opp": 4
    },
    "clips": [
@@ -94,7 +94,7 @@
    "clock": "7:55",
    "pbp_clock": "7:55",
    "score": {
-    "dea": 9,
+    "team": 9,
     "opp": 9
    },
    "clips": [
@@ -130,7 +130,7 @@
    "clock": "7:48",
    "pbp_clock": "7:48",
    "score": {
-    "dea": 9,
+    "team": 9,
     "opp": 9
    },
    "clips": [
@@ -166,7 +166,7 @@
    "clock": "7:43",
    "pbp_clock": "7:43",
    "score": {
-    "dea": 12,
+    "team": 12,
     "opp": 9
    },
    "clips": [
@@ -202,7 +202,7 @@
    "clock": "6:28",
    "pbp_clock": "6:27",
    "score": {
-    "dea": 15,
+    "team": 15,
     "opp": 11
    },
    "clips": [
@@ -238,7 +238,7 @@
    "clock": "4:47",
    "pbp_clock": "4:47",
    "score": {
-    "dea": 15,
+    "team": 15,
     "opp": 13
    },
    "clips": [
@@ -274,7 +274,7 @@
    "clock": "4:41",
    "pbp_clock": "4:41",
    "score": {
-    "dea": 18,
+    "team": 18,
     "opp": 13
    },
    "clips": [
@@ -310,7 +310,7 @@
    "clock": "2:57",
    "pbp_clock": "2:57",
    "score": {
-    "dea": 21,
+    "team": 21,
     "opp": 15
    },
    "clips": [
@@ -346,7 +346,7 @@
    "clock": "0:58.4",
    "pbp_clock": "0:58",
    "score": {
-    "dea": 25,
+    "team": 25,
     "opp": 17
    },
    "clips": [
@@ -382,7 +382,7 @@
    "clock": "0:26.3",
    "pbp_clock": "0:26",
    "score": {
-    "dea": 25,
+    "team": 25,
     "opp": 17
    },
    "clips": [
@@ -418,7 +418,7 @@
    "clock": "0:03.5",
    "pbp_clock": "0:03",
    "score": {
-    "dea": 28,
+    "team": 28,
     "opp": 17
    },
    "clips": [
@@ -454,7 +454,7 @@
    "clock": "10:59",
    "pbp_clock": "10:59",
    "score": {
-    "dea": 30,
+    "team": 30,
     "opp": 22
    },
    "clips": [
@@ -476,7 +476,7 @@
    "clock": "9:03",
    "pbp_clock": "9:04",
    "score": {
-    "dea": 32,
+    "team": 32,
     "opp": 27
    },
    "clips": [
@@ -498,7 +498,7 @@
    "clock": "8:13",
    "pbp_clock": "8:13",
    "score": {
-    "dea": 32,
+    "team": 32,
     "opp": 30
    },
    "clips": [
@@ -520,7 +520,7 @@
    "clock": "7:47",
    "pbp_clock": "7:47",
    "score": {
-    "dea": 32,
+    "team": 32,
     "opp": 30
    },
    "clips": [
@@ -542,7 +542,7 @@
    "clock": "7:44",
    "pbp_clock": "7:44",
    "score": {
-    "dea": 34,
+    "team": 34,
     "opp": 30
    },
    "clips": [
@@ -564,7 +564,7 @@
    "clock": "6:15",
    "pbp_clock": "6:15",
    "score": {
-    "dea": 34,
+    "team": 34,
     "opp": 30
    },
    "clips": [
@@ -586,7 +586,7 @@
    "clock": "6:01",
    "pbp_clock": "6:01",
    "score": {
-    "dea": 37,
+    "team": 37,
     "opp": 30
    },
    "clips": [
@@ -608,7 +608,7 @@
    "clock": "5:33",
    "pbp_clock": "5:33",
    "score": {
-    "dea": 37,
+    "team": 37,
     "opp": 30
    },
    "clips": [
@@ -637,7 +637,7 @@
    "clock": "4:33",
    "pbp_clock": "4:33",
    "score": {
-    "dea": 39,
+    "team": 39,
     "opp": 32
    },
    "clips": [
@@ -666,7 +666,7 @@
    "clock": "4:18",
    "pbp_clock": "4:18",
    "score": {
-    "dea": 39,
+    "team": 39,
     "opp": 32
    },
    "clips": [
@@ -695,7 +695,7 @@
    "clock": "4:07",
    "pbp_clock": "4:07",
    "score": {
-    "dea": 41,
+    "team": 41,
     "opp": 32
    },
    "clips": [
@@ -717,7 +717,7 @@
    "clock": "3:07",
    "pbp_clock": "3:07",
    "score": {
-    "dea": 44,
+    "team": 44,
     "opp": 34
    },
    "clips": [
@@ -746,7 +746,7 @@
    "clock": "2:47",
    "pbp_clock": "2:47",
    "score": {
-    "dea": 44,
+    "team": 44,
     "opp": 34
    },
    "clips": [
@@ -775,7 +775,7 @@
    "clock": "0:45.3",
    "pbp_clock": "0:45",
    "score": {
-    "dea": 46,
+    "team": 46,
     "opp": 39
    },
    "clips": [
@@ -804,7 +804,7 @@
    "clock": "0:26.2",
    "pbp_clock": "0:26",
    "score": {
-    "dea": 46,
+    "team": 46,
     "opp": 39
    },
    "clips": [
@@ -833,7 +833,7 @@
    "clock": "0:19.2",
    "pbp_clock": "0:20",
    "score": {
-    "dea": 48,
+    "team": 48,
     "opp": 39
    },
    "clips": [
@@ -862,7 +862,7 @@
    "clock": "11:20",
    "pbp_clock": "11:20",
    "score": {
-    "dea": 48,
+    "team": 48,
     "opp": 42
    },
    "clips": [
@@ -891,7 +891,7 @@
    "clock": "11:09",
    "pbp_clock": "11:09",
    "score": {
-    "dea": 51,
+    "team": 51,
     "opp": 42
    },
    "clips": [
@@ -920,7 +920,7 @@
    "clock": "10:43",
    "pbp_clock": "10:43",
    "score": {
-    "dea": 51,
+    "team": 51,
     "opp": 42
    },
    "clips": [
@@ -949,7 +949,7 @@
    "clock": "10:38",
    "pbp_clock": "10:38",
    "score": {
-    "dea": 51,
+    "team": 51,
     "opp": 42
    },
    "clips": [
@@ -978,7 +978,7 @@
    "clock": "5:07",
    "pbp_clock": "5:07",
    "score": {
-    "dea": 54,
+    "team": 54,
     "opp": 55
    },
    "clips": [
@@ -1014,7 +1014,7 @@
    "clock": "3:58",
    "pbp_clock": "3:58",
    "score": {
-    "dea": 54,
+    "team": 54,
     "opp": 58
    },
    "clips": [
@@ -1050,7 +1050,7 @@
    "clock": "3:26",
    "pbp_clock": "3:26",
    "score": {
-    "dea": 56,
+    "team": 56,
     "opp": 58
    },
    "clips": [
@@ -1086,7 +1086,7 @@
    "clock": "0:43.2",
    "pbp_clock": "0:43",
    "score": {
-    "dea": 62,
+    "team": 62,
     "opp": 67
    },
    "clips": [
@@ -1122,7 +1122,7 @@
    "clock": "11:25",
    "pbp_clock": "11:25",
    "score": {
-    "dea": 65,
+    "team": 65,
     "opp": 67
    },
    "clips": [
@@ -1151,7 +1151,7 @@
    "clock": "8:33",
    "pbp_clock": "8:33",
    "score": {
-    "dea": 67,
+    "team": 67,
     "opp": 69
    },
    "clips": [
@@ -1180,7 +1180,7 @@
    "clock": "8:12",
    "pbp_clock": "8:12",
    "score": {
-    "dea": 67,
+    "team": 67,
     "opp": 69
    },
    "clips": [
@@ -1209,7 +1209,7 @@
    "clock": "8:04",
    "pbp_clock": "8:04",
    "score": {
-    "dea": 69,
+    "team": 69,
     "opp": 69
    },
    "clips": [
@@ -1238,7 +1238,7 @@
    "clock": "5:36",
    "pbp_clock": "5:36",
    "score": {
-    "dea": 72,
+    "team": 72,
     "opp": 74
    },
    "clips": [
@@ -1274,7 +1274,7 @@
    "clock": "4:31",
    "pbp_clock": "4:31",
    "score": {
-    "dea": 72,
+    "team": 72,
     "opp": 75
    },
    "clips": [
@@ -1310,7 +1310,7 @@
    "clock": "4:28",
    "pbp_clock": "4:28",
    "score": {
-    "dea": 74,
+    "team": 74,
     "opp": 75
    },
    "clips": [
@@ -1346,7 +1346,7 @@
    "clock": "3:45",
    "pbp_clock": "3:45",
    "score": {
-    "dea": 77,
+    "team": 77,
     "opp": 77
    },
    "clips": [
@@ -1382,7 +1382,7 @@
    "clock": "3:27",
    "pbp_clock": "3:27",
    "score": {
-    "dea": 77,
+    "team": 77,
     "opp": 77
    },
    "clips": [
@@ -1418,7 +1418,7 @@
    "clock": "3:25",
    "pbp_clock": "3:25",
    "score": {
-    "dea": 79,
+    "team": 79,
     "opp": 77
    },
    "clips": [
@@ -1454,7 +1454,7 @@
    "clock": "0:44.4",
    "pbp_clock": "0:44",
    "score": {
-    "dea": 79,
+    "team": 79,
     "opp": 83
    },
    "clips": [
@@ -1490,7 +1490,7 @@
    "clock": "0:33.8",
    "pbp_clock": "0:34",
    "score": {
-    "dea": 81,
+    "team": 81,
     "opp": 83
    },
    "clips": [
@@ -1526,7 +1526,7 @@
    "clock": "0:23.8",
    "pbp_clock": "0:24",
    "score": {
-    "dea": 81,
+    "team": 81,
     "opp": 83
    },
    "clips": [

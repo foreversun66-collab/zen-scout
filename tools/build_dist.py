@@ -4,6 +4,7 @@
   site/index.html、web/index.html、web/search.js、data/events_1025.json
   clips/<片段>.mp4、covers/<片段>.jpg —— 只收 events_1025.json 裡實際引用到的那 115 組
   index.html（dist 根目錄，本工具產生：轉到 site/index.html）
+  _headers（dist 根目錄，本工具產生：Cloudflare Pages 對所有路徑加 X-Robots-Tag: noindex, nofollow）
   （另寫 local/dist_manifest.json：每個檔的相對路徑、大小、sha256 —— 不進 dist）
 一律不得進 dist：local/、tools/、.git、*.db、*.log、*.csv、*.bak*（另外再對 dist 全掃一次確認）。
 
@@ -38,12 +39,14 @@ MAX_FILES = 20000
 MAX_BYTES = 25 * 1024 * 1024
 BAD_TOP = {"local", "tools", ".git"}
 BAD_EXT = (".db", ".log", ".csv", ".db-wal", ".db-shm", ".py", ".pyc")
+COPYRIGHT = "影像素材版權屬中信特攻籃球隊，僅供本次競賽展示"
+HEADERS = "/*\n  X-Robots-Tag: noindex, nofollow\n"
 ROOT_INDEX = """<!DOCTYPE html>
 <html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
 <meta http-equiv="refresh" content="0; url=site/index.html">
 <link rel="icon" href="data:,">
-<title>DEA MAM 展示版</title></head>
+<title>ZEN 幀探</title></head>
 <body><p><a href="site/index.html">前往作品首頁</a></p></body></html>
 """
 
@@ -154,7 +157,7 @@ def check_links(d):
 def main():
     verify_only = "--verify-only" in sys.argv[1:]     # 不重建，只驗證現有的 dist（驗證本身的對照測試用）
     files, d = whitelist()
-    out = files + ["index.html"]
+    out = files + ["index.html", "_headers"]
     if not verify_only:
         for rel in files:
             if not os.path.isfile(os.path.join(ROOT, rel)):
@@ -167,6 +170,8 @@ def main():
             shutil.copyfile(os.path.join(ROOT, rel), dst)        # 只複製內容，不帶原檔的時間與屬性
         with io.open(os.path.join(DIST, "index.html"), "w", encoding="utf-8", newline="\n") as f:
             f.write(ROOT_INDEX)
+        with io.open(os.path.join(DIST, "_headers"), "w", encoding="utf-8", newline="\n") as f:
+            f.write(HEADERS)
         man = {"files": [{"path": r, "bytes": os.path.getsize(os.path.join(DIST, r)),
                           "sha256": sha256(os.path.join(DIST, r))} for r in sorted(out)]}
         with io.open(MANIFEST_PATH, "w", encoding="utf-8", newline="\n") as f:
@@ -203,6 +208,28 @@ def main():
         m = man.get(rel)
         if not m or m["bytes"] != size or m["sha256"] != sha256(os.path.join(DIST, rel)):
             bad.append(f"跟 local/dist_manifest.json 對不上：{rel}")
+    try:
+        with io.open(os.path.join(DIST, "_headers"), encoding="utf-8", newline="") as f:
+            if f.read() != HEADERS:
+                bad.append("_headers 內容不對（要對所有路徑加 X-Robots-Tag: noindex, nofollow）")
+    except OSError:
+        bad.append("dist 沒有 _headers")
+    # 品牌檢查（第 4 輪改名 ZEN 幀探）：文字檔裡「DEA」不分大小寫 0 筆；「中信特攻」只能在版權聲明那一句
+    n_dea = n_ctbc = n_ctbc_ok = 0
+    for rel, _ in allf:
+        if rel.endswith((".mp4", ".jpg")):
+            continue
+        with io.open(os.path.join(DIST, rel), encoding="utf-8", errors="replace") as f:
+            txt = f.read()
+        k = len(re.findall(r"(?i)dea", txt))
+        if k:
+            bad.append(f"品牌檢查：{rel} 有 {k} 處「DEA」")
+        n_dea += k
+        n_ctbc += txt.count("中信特攻")
+        n_ctbc_ok += txt.count(COPYRIGHT)
+    if n_ctbc != n_ctbc_ok or n_ctbc_ok < 1:
+        bad.append(f"品牌檢查：「中信特攻」出現 {n_ctbc} 次，其中在版權聲明裡 {n_ctbc_ok} 次")
+    print(f"品牌檢查：DEA {n_dea} 筆；「中信特攻」{n_ctbc} 次（版權聲明 {n_ctbc_ok} 次）")
     total = sum(s for _, s in allf)
     big = max(allf, key=lambda x: x[1])
     nf = len(allf)

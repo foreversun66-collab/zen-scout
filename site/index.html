@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:,">
-<title>DEA MAM — 職業籃球隊影像素材 AI 索引系統</title>
+<title>ZEN 幀探 — 每一球，都找得到那一幀</title>
 <style>
   /* 視覺沿用 web/index.html（深色、黃色重點、藍色互動）；另備淺色，讓架構圖在兩種模式都清楚 */
   :root { --bg:#0f1115; --panel:#181b22; --panel2:#1f232c; --line:#2a2f3a; --fg:#e8eaf0; --dim:#9aa3b2;
@@ -25,6 +25,8 @@
   header.hero { padding:44px 0 26px; border-bottom:1px solid var(--line); }
   .hero .kicker { color:var(--dim); font-size:14px; letter-spacing:.05em; }
   .hero h1 { margin:6px 0 10px; font-size:30px; line-height:1.35; }
+  .hero .tagline { font-size:21px; font-weight:700; color:var(--acc); margin:0 0 4px; }
+  .hero .naming { color:var(--dim); font-size:15px; margin:0 0 14px; }
   .hero .one { font-size:18px; margin:0 0 20px; }
   .cta { display:flex; flex-wrap:wrap; gap:10px; }
   .btn { display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-weight:700; font-size:16px;
@@ -63,11 +65,15 @@
   table { width:100%; border-collapse:collapse; margin-top:10px; font-size:15px; }
   th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th { color:var(--dim); font-weight:600; font-size:13px; }
-  td:first-child { white-space:nowrap; font-weight:700; }
+  td:first-child { font-weight:700; min-width:8em; }
+  td:last-child { font-size:14px; }
+  .unk { display:inline-block; color:var(--dim); border:1px dashed var(--line); border-radius:6px; padding:0 6px; font-size:13px; }
+  .tbl { overflow-x:auto; }
+  code { font-size:13px; background:var(--panel2); border-radius:4px; padding:0 4px; }
   .status li { margin:4px 0; }
   footer { margin-top:40px; padding:22px 0 34px; border-top:1px solid var(--line); color:var(--dim); font-size:14px; text-align:center; }
   @media (max-width:640px) {
-    header.hero { padding:28px 0 20px; } .hero h1 { font-size:23px; } .hero .one { font-size:16px; }
+    header.hero { padding:28px 0 20px; } .hero h1 { font-size:26px; } .hero .tagline { font-size:18px; } .hero .one { font-size:16px; }
     .pain, .two { grid-template-columns:1fr; }
     section { padding:26px 0 4px; } section h2 { font-size:19px; }
     td:first-child { white-space:normal; }
@@ -80,8 +86,10 @@
 <header class="hero">
   <div class="wrap">
     <div class="kicker">OPEN LAB 作品展示</div>
-    <!-- (a) 作品名稱：暫定，待 Ming 確認 -->
-    <h1 id="title">DEA MAM — 職業籃球隊影像素材 AI 索引系統 <span class="todo">作品名稱暫定・待 Ming 確認</span></h1>
+    <!-- (a) 作品名稱：ZEN 幀探（第 4 輪定名） -->
+    <h1 id="title">ZEN 幀探</h1>
+    <p class="tagline" id="tagline">每一球，都找得到那一幀</p>
+    <p class="naming" id="naming">幀是影像的最小單位；幀探，就是幫剪接師找到那一幀的球探。</p>
     <p class="one">輸入「球員＋動作」，直接找到那一球在每一台攝影機的第幾秒——把一整季的多機位比賽素材，變成剪接師查得到的資料庫。</p>
     <div class="cta">
       <a class="btn primary" id="tryBtn" href="../web/index.html">▶ 線上體驗</a>
@@ -236,30 +244,37 @@
   <!-- (i) 第三方來源 -->
   <section id="credits">
     <h2><span class="no">08</span>使用的開源工具與服務</h2>
-    <p class="lead">依程式實際載入的套件與呼叫的外部程式整理。</p>
-    <table>
-      <thead><tr><th>名稱</th><th>用途</th></tr></thead>
+    <p class="lead">依程式實際載入的套件與呼叫的外部程式整理。授權欄依本機安裝的套件資訊（套件中繼資料、隨附的授權檔、<code>ffmpeg -L</code>）查核；本機查不到的寫「未確認」。</p>
+    <div class="tbl"><table>
+      <thead><tr><th>名稱</th><th>用途</th><th>授權</th></tr></thead>
       <tbody>
-        <tr><td>FFmpeg／FFprobe</td><td>讀取影片資訊、抽縮圖與九宮格、即時轉檔播放、產生代理檔、切展示片段</td></tr>
-        <tr><td>SQLite</td><td>每顆碟的索引與標註資料庫（Python 內建）</td></tr>
-        <tr><td>Python</td><td>整套系統的主要語言</td></tr>
-        <tr><td>Flask、Werkzeug</td><td>操作台、中央索引、寫入服務的網頁後端</td></tr>
-        <tr><td>OpenCV、NumPy</td><td>比分板畫面的影像比對與判讀</td></tr>
-        <tr><td>WhisperX（Whisper large-v3 模型）</td><td>訪談語音轉逐字稿</td></tr>
-        <tr><td>OpenCC</td><td>逐字稿簡繁轉換</td></tr>
-        <tr><td>MCP Python SDK</td><td>讓 AI 助理透過 Model Context Protocol 查詢素材庫</td></tr>
-        <tr><td>httpx</td><td>各服務之間的連線</td></tr>
-        <tr><td>Playwright</td><td>抓取聯盟官網的逐球紀錄</td></tr>
-        <tr><td>gspread、google-auth</td><td>讀取舊賽季的影音資料庫試算表</td></tr>
-        <tr><td>Robocopy（Windows 內建）</td><td>把選好的素材複製到收集碟</td></tr>
-        <tr><td>Node.js、Git</td><td>開發用：檢查前端程式語法、版本管理</td></tr>
-        <tr><td>DaVinci Resolve（腳本介面）</td><td>一鍵把片段送進剪接軟體的媒體池（商用軟體）</td></tr>
-        <tr><td>TPBL 聯盟比賽紀錄</td><td>逐球紀錄（PBP）的資料來源</td></tr>
-        <tr><td>Google 雲端硬碟、Google Apps Script</td><td>索引快照與發佈、手機查詢頁</td></tr>
-        <tr><td>Claude Code／Claude（Anthropic）</td><td>開發協作；AI 助理透過 MCP 查詢素材庫</td></tr>
+        <tr><td>FFmpeg／FFprobe</td><td>讀取影片資訊、抽縮圖與九宮格、即時轉檔播放、產生代理檔、切展示片段</td><td>GPL v3 或更新版（本機版本）</td></tr>
+        <tr><td>SQLite</td><td>每顆碟的索引與標註資料庫（Python 內建）</td><td><span class="unk">未確認</span></td></tr>
+        <tr><td>Python</td><td>整套系統的主要語言</td><td>PSF License Version 2</td></tr>
+        <tr><td>Flask、Werkzeug</td><td>操作台、中央索引、寫入服務的網頁後端</td><td>BSD-3-Clause</td></tr>
+        <tr><td>OpenCV</td><td>比分板畫面的影像比對與判讀</td><td>Apache 2.0</td></tr>
+        <tr><td>NumPy</td><td>比分板判讀的數值運算</td><td>BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0</td></tr>
+        <tr><td>WhisperX</td><td>訪談語音轉逐字稿</td><td>BSD-2-Clause</td></tr>
+        <tr><td>faster-whisper</td><td>WhisperX 使用的語音辨識引擎</td><td>MIT</td></tr>
+        <tr><td>Whisper large-v3 模型（faster-whisper 格式）</td><td>語音辨識模型</td><td><span class="unk">未確認</span></td></tr>
+        <tr><td>wav2vec2 中文對齊模型</td><td>把逐字稿對到精確的時間點</td><td><span class="unk">未確認</span></td></tr>
+        <tr><td>OpenCC</td><td>逐字稿簡繁轉換</td><td>Apache License 2.0</td></tr>
+        <tr><td>MCP Python SDK</td><td>讓 AI 助理透過 Model Context Protocol 查詢素材庫</td><td>MIT</td></tr>
+        <tr><td>httpx</td><td>各服務之間的連線</td><td>BSD-3-Clause</td></tr>
+        <tr><td>Playwright</td><td>抓取聯盟官網的逐球紀錄</td><td>Apache-2.0</td></tr>
+        <tr><td>gspread</td><td>讀取舊賽季的影音資料庫試算表</td><td>MIT</td></tr>
+        <tr><td>google-auth</td><td>試算表讀取的身分驗證</td><td>Apache 2.0</td></tr>
+        <tr><td>Robocopy</td><td>把選好的素材複製到收集碟</td><td>Windows 內建（Microsoft，隨 Windows 授權）</td></tr>
+        <tr><td>Git</td><td>開發用：版本管理</td><td>GPL v2</td></tr>
+        <tr><td>Node.js</td><td>開發用：檢查前端程式語法、部署工具</td><td><span class="unk">未確認</span></td></tr>
+        <tr><td>Wrangler（Cloudflare）</td><td>把這個展示網站部署到 Cloudflare Pages</td><td>MIT OR Apache-2.0</td></tr>
+        <tr><td>Cloudflare Pages</td><td>這個展示網站的主機</td><td>不適用（線上服務，依其服務條款）</td></tr>
+        <tr><td>DaVinci Resolve（腳本介面）</td><td>一鍵把片段送進剪接軟體的媒體池</td><td>商用軟體（Blackmagic Design 最終使用者授權合約）</td></tr>
+        <tr><td>TPBL 聯盟比賽紀錄</td><td>逐球紀錄（PBP）的資料來源</td><td>不適用（線上資料來源，依其使用條款）</td></tr>
+        <tr><td>Google 雲端硬碟、Google Apps Script</td><td>索引快照與發佈、手機查詢頁</td><td>不適用（線上服務，依其服務條款）</td></tr>
+        <tr><td>Claude Code／Claude（Anthropic）</td><td>開發協作；AI 助理透過 MCP 查詢素材庫</td><td>不適用（線上服務，依其服務條款）</td></tr>
       </tbody>
-    </table>
-    <p class="lead" style="margin-top:8px">各項的授權條款 <span class="todo">待上線前逐項核對</span></p>
+    </table></div>
   </section>
 
 </main>

@@ -10,3 +10,7 @@ __pycache__/
 *.bak_*
 # 上線打包結果（tools\build_dist.py 產生）
 dist/
+*.bak
+# 部署工具（npm 本地安裝）
+node_modules/
+.wrangler/
