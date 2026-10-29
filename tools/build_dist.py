@@ -34,6 +34,7 @@ from urllib.parse import urlsplit, unquote
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DIST = os.path.join(ROOT, "dist")
 MANIFEST_PATH = os.path.join(ROOT, "local", "dist_manifest.json")   # 不放進 dist：sha256 長得像金鑰，掃描會命中，而且這份清單不需要公開
+ALLOWED_EXTERNAL = {"https://github.com/foreversun66-collab/zen-scout"}   # 唯一允許的外部連結：交付頁的程式庫按鈕
 STATIC = ["site/index.html", "web/index.html", "web/search.js", "data/events_1025.json"]
 EVENTS = "data/events_1025.json"
 MAX_FILES = 20000
@@ -129,7 +130,7 @@ class Links(HTMLParser):
 
 def check_links(d):
     """回 (檢查的連結數, 斷連結清單, 外部連結清單)。"""
-    n, broken, external = 0, [], []
+    n, broken, external, allowed_ext = 0, [], [], []
 
     def target_ok(from_rel, ref):
         nonlocal n
@@ -137,7 +138,10 @@ def check_links(d):
             return
         u = urlsplit(ref)
         if u.scheme or u.netloc:
-            external.append((from_rel, ref))
+            if ref in ALLOWED_EXTERNAL:
+                allowed_ext.append((from_rel, ref))
+            else:
+                external.append((from_rel, ref))
             return
         n += 1
         base = "" if u.path.startswith("/") else os.path.dirname(from_rel)
@@ -166,7 +170,7 @@ def check_links(d):
                     for c in e["clips"]:
                         target_ok(rel, m.group(1) + c["video"])
                         target_ok(rel, m.group(1) + c["cover"])
-    return n, broken, external
+    return n, broken, external, allowed_ext
 
 
 def main():
@@ -280,8 +284,8 @@ def main():
     if sc.returncode != 0:
         bad.append("機敏掃描有命中：\n" + "\n".join(l for l in sc.stdout.splitlines() if "\t" in l))
 
-    n, broken, external = check_links(d)
-    print(f"站內連結：檢查 {n} 條、斷連結 {len(broken)}、外部連結 {len(external)}")
+    n, broken, external, allowed_ext = check_links(d)
+    print(f"站內連結：檢查 {n} 條、斷連結 {len(broken)}、外部連結 {len(external)}（白名單內的外部連結 {len(allowed_ext)} 條：{sorted(set(x[1] for x in allowed_ext))}）")
     for b in broken[:10]:
         bad.append(f"斷連結：{b[0]} → {b[1]}")
     for x in external[:10]:

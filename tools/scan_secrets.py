@@ -18,7 +18,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TERMS = os.path.join(ROOT, "local", "scan_terms.json")
 PUBLIC_DIRS = ("site", "web", "data", "dist")   # 會公開的；dist＝上線打包結果
-SKIP_DIRS = {".git", "__pycache__", "clips", "covers", "node_modules", ".wrangler", "_wrangler_cfg"}   # _wrangler_cfg：Cloudflare 登入資料，掃描工具一律不讀   # 影片／封面是二進位，另行處理
+SKIP_DIRS = {".git", "__pycache__", "clips", "covers", "node_modules", ".wrangler", "_wrangler_cfg", "_gcm_store"}   # _wrangler_cfg／_gcm_store：Cloudflare／GitHub 登入資料，掃描工具一律不讀   # 影片／封面是二進位，另行處理
 
 _OCT = r"(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 PATTERNS = [
@@ -47,12 +47,22 @@ def load_terms():
     return out
 
 
+def load_allow():
+    """詞表的「允許」：刻意公開的完整字串（例：GitHub 帳號名稱，它就在 repo 網址裡）。
+    掃描每一行前先把這些完整字串拿掉，其餘照常比對（所以它的一部分單獨出現時仍會命中）。"""
+    if not os.path.isfile(TERMS):
+        return []
+    with io.open(TERMS, encoding="utf-8-sig") as f:
+        return [w for w in json.load(f).get("允許", []) if w]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", help="結果另存（必須在專案資料夾底下）")
     ap.add_argument("--dir", help="只掃這個資料夾（專案內）")
     args = ap.parse_args()
     pats = PATTERNS + load_terms()
+    allow = [re.compile(re.escape(w), re.I) for w in load_allow()]
     hits, nfiles, binaries = [], 0, []
     start = ROOT
     if args.dir:
@@ -78,6 +88,8 @@ def main():
             nfiles += 1
             text = raw.decode("utf-8-sig", errors="replace")
             for ln, line in enumerate(text.splitlines(), 1):
+                for a in allow:
+                    line = a.sub("", line)
                 for kind, rx in pats:
                     n = len(rx.findall(line))
                     if n:
