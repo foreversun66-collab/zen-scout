@@ -3,7 +3,7 @@
 只提供會公開的東西：site/、web/、data/、clips/、covers/。local/、tools/、.git 等一律 404。
 網址根 / 轉到作品首頁 /site/index.html。--root dist 可以直接預覽打包結果（必須在專案資料夾底下）。
 支援 Range（影片拖曳、切換機位對時要用）。網址：http://127.0.0.1:<埠>/
-用法：py tools\\serve_local.py [--root dist] [--port 4780]
+用法：py tools\\serve_local.py [--root dist] [--port 4780] [--no-range]
 （8740 不能用：落在 Windows 保留的 TCP 埠範圍 8712–8811，綁定會被拒絕 10013；第 2 輪實測）
 """
 import argparse
@@ -15,6 +15,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOW = ("site", "web", "data", "clips", "covers")
 SERVE_ROOT = ROOT          # 由 --root 改
+NO_RANGE = False           # 由 --no-range 改：模擬 Cloudflare Pages（不支援部分下載）
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -37,7 +38,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         if not self._allowed():
             self.send_error(404)
             return None
-        rng = self.headers.get("Range")
+        rng = None if NO_RANGE else self.headers.get("Range")   # 模擬模式：Range 一律忽略、回整檔 200
         fpath = self.translate_path(self.path)
         if not rng or not os.path.isfile(fpath):
             return super().send_head()
@@ -82,9 +83,24 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header("Cache-Control", "no-cache")
-        if not self.headers.get("Range"):
+        if not NO_RANGE and not self.headers.get("Range"):
             self.send_header("Accept-Ranges", "bytes")
         super().end_headers()
+
+    def send_error(self, code, message=None, explain=None):
+        # 跟 Cloudflare Pages 一樣：找不到時，資料夾裡有 404.html 就回那一頁（狀態仍是 404）
+        nf = os.path.join(SERVE_ROOT, "404.html")
+        if code == 404 and os.path.isfile(nf):
+            with open(nf, "rb") as f:
+                body = f.read()
+            self.send_response(404)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            if self.command != "HEAD":
+                self.wfile.write(body)
+            return
+        super().send_error(code, message, explain)
 
     def log_message(self, fmt, *args):
         pass
@@ -94,8 +110,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=4780)
     ap.add_argument("--root", help="要提供的資料夾（專案內，例：dist）；預設＝專案根")
+    ap.add_argument("--no-range", action="store_true", help="模擬不支援部分下載的主機（Cloudflare Pages）：Range 忽略、不送 Accept-Ranges")
     args = ap.parse_args()
-    global SERVE_ROOT
+    global SERVE_ROOT, NO_RANGE
+    NO_RANGE = args.no_range
     if args.root:
         r = os.path.realpath(os.path.join(ROOT, args.root) if not os.path.isabs(args.root) else args.root)
         base = os.path.normcase(os.path.realpath(ROOT))
@@ -108,7 +126,7 @@ def main():
             sys.exit(2)
         SERVE_ROOT = r
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
-    print(f"預覽：http://127.0.0.1:{args.port}/（提供 {os.path.relpath(SERVE_ROOT, ROOT)}；只綁 127.0.0.1；Ctrl+C 關閉）", flush=True)
+    print(f"預覽：http://127.0.0.1:{args.port}/（提供 {os.path.relpath(SERVE_ROOT, ROOT)}；只綁 127.0.0.1{'；不支援部分下載（模擬 Cloudflare）' if NO_RANGE else ''}；Ctrl+C 關閉）", flush=True)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

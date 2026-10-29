@@ -4,6 +4,7 @@
   site/index.html、web/index.html、web/search.js、data/events_1025.json
   clips/<片段>.mp4、covers/<片段>.jpg —— 只收 events_1025.json 裡實際引用到的那 115 組
   index.html（dist 根目錄，本工具產生：轉到 site/index.html）
+  404.html（dist 根目錄，本工具產生：Cloudflare Pages 找不到檔案時回這頁、狀態 404；沒有它會把首頁當 200 回）
   _headers（dist 根目錄，本工具產生：Cloudflare Pages 對所有路徑加 X-Robots-Tag: noindex, nofollow）
   （另寫 local/dist_manifest.json：每個檔的相對路徑、大小、sha256 —— 不進 dist）
 一律不得進 dist：local/、tools/、.git、*.db、*.log、*.csv、*.bak*（另外再對 dist 全掃一次確認）。
@@ -42,6 +43,16 @@ BAD_EXT = (".db", ".log", ".csv", ".db-wal", ".db-shm", ".py", ".pyc")
 COPYRIGHT = "影像素材版權屬中信特攻籃球隊，僅供本次競賽展示"
 PRODUCT = "ZEN Scout 幀探"
 HEADERS = "/*\n  X-Robots-Tag: noindex, nofollow\n"
+NOT_FOUND = """<!DOCTYPE html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,">
+<title>ZEN Scout 幀探｜找不到這一頁</title>
+<style>body{margin:0;background:#0f1115;color:#e8eaf0;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center}a{color:#f5c518}</style></head>
+<body><div><h1>找不到這一頁</h1><p><a href="/site/">回到 ZEN Scout 幀探 首頁</a></p></div></body></html>
+"""
 ROOT_INDEX = """<!DOCTYPE html>
 <html lang="zh-Hant-TW"><head><meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
@@ -129,12 +140,15 @@ def check_links(d):
             external.append((from_rel, ref))
             return
         n += 1
-        base = os.path.dirname(from_rel)
-        tgt = os.path.normpath(os.path.join(base, unquote(u.path))).replace("\\", "/")
+        base = "" if u.path.startswith("/") else os.path.dirname(from_rel)
+        path = unquote(u.path).lstrip("/") if u.path.startswith("/") else unquote(u.path)
+        if path == "" or path.endswith("/"):
+            path += "index.html"          # /site/ → site/index.html（Cloudflare Pages 的簡短網址）
+        tgt = os.path.normpath(os.path.join(base, path)).replace("\\", "/")
         if tgt.startswith("..") or not os.path.isfile(os.path.join(DIST, tgt)):
             broken.append((from_rel, ref))
 
-    for rel in ("index.html", "site/index.html", "web/index.html"):
+    for rel in ("index.html", "404.html", "site/index.html", "web/index.html"):
         with io.open(os.path.join(DIST, rel), encoding="utf-8") as f:
             text = f.read()
         p = Links()
@@ -158,7 +172,7 @@ def check_links(d):
 def main():
     verify_only = "--verify-only" in sys.argv[1:]     # 不重建，只驗證現有的 dist（驗證本身的對照測試用）
     files, d = whitelist()
-    out = files + ["index.html", "_headers"]
+    out = files + ["index.html", "404.html", "_headers"]
     if not verify_only:
         for rel in files:
             if not os.path.isfile(os.path.join(ROOT, rel)):
@@ -171,6 +185,8 @@ def main():
             shutil.copyfile(os.path.join(ROOT, rel), dst)        # 只複製內容，不帶原檔的時間與屬性
         with io.open(os.path.join(DIST, "index.html"), "w", encoding="utf-8", newline="\n") as f:
             f.write(ROOT_INDEX)
+        with io.open(os.path.join(DIST, "404.html"), "w", encoding="utf-8", newline="\n") as f:
+            f.write(NOT_FOUND)
         with io.open(os.path.join(DIST, "_headers"), "w", encoding="utf-8", newline="\n") as f:
             f.write(HEADERS)
         man = {"files": [{"path": r, "bytes": os.path.getsize(os.path.join(DIST, r)),

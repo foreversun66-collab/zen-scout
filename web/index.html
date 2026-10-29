@@ -142,7 +142,39 @@
     });
   }
 
+  // ---- 影片載入：整段下載成 blob 再播放 ----
+  // 展示主機（Cloudflare Pages）不支援 HTTP Range（部分下載）：直接拿網址播放時，瀏覽器跳不到還沒下載到的位置
+  // （拖進度、切機位會從頭播），iOS Safari 甚至可能整段不播。每段不到 5 MB，所以先整段下載，
+  // 明確包成 type=video/mp4 的 blob 再交給 <video>；blob 在本機記憶體裡，拖進度、切機位都不需要伺服器配合。
+  var BLOBS = {};          // 片段編號 → Promise<{url, type}>；只留目前這個事件的機位，關掉就釋放
+  var seq = 0;             // 每次播放請求加 1：只有最新的那次算數（快速連點機位時，舊的下載完不會蓋掉新的）
+  function loadClip(c) {
+    if (!BLOBS[c.id]) {
+      var p = fetch(BASE + c.video).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.arrayBuffer();
+      }).then(function (buf) {
+        var b = new Blob([buf], { type: 'video/mp4' });
+        return { url: URL.createObjectURL(b), type: b.type };
+      });
+      p.catch(function () { if (BLOBS[c.id] === p) delete BLOBS[c.id]; });   // 失敗的不留，下次點會重試
+      BLOBS[c.id] = p;
+    }
+    return BLOBS[c.id];
+  }
+  function dropBlobs() {
+    Object.keys(BLOBS).forEach(function (k) {
+      BLOBS[k].then(function (x) { URL.revokeObjectURL(x.url); }, function () {});
+    });
+    BLOBS = {};
+  }
+  // 主機位開始播放後，背景預先下載同事件的其他機位，切換時就不用再等
+  function prefetchOthers(e, c) {
+    e.clips.forEach(function (x) { if (x.id !== c.id) loadClip(x).catch(function () {}); });
+  }
+
   function openEvent(e) {
+    seq++; dropBlobs();
     cur = e;
     $('pTitle').textContent = e.period + ' ' + e.clock + '｜' + S.eventTitle(e);
     var tabs = $('pTabs'); tabs.textContent = '';
@@ -161,20 +193,41 @@
     var rel = null;
     if (keepTime && curClip && !isNaN(v.currentTime)) rel = v.currentTime - (curClip.t_event || 0);
     curClip = c;
+    var my = ++seq, ev = cur;
     Array.prototype.forEach.call($('pTabs').children, function (b) { b.classList.toggle('on', b.dataset.id === c.id); });
-    $('pInfo').textContent = '機位 ' + c.camera + (cur.clips.length > 1 ? '（共 ' + cur.clips.length + ' 台，可切換）' : '');
+    var info = '機位 ' + c.camera + (cur.clips.length > 1 ? '（共 ' + cur.clips.length + ' 台，可切換）' : '');
+    $('pInfo').textContent = '影片載入中…　' + info;
     v.poster = BASE + c.cover;
-    v.src = BASE + c.video;
-    v.onloadedmetadata = function () {
-      var t = rel == null ? 0 : (c.t_event || 0) + rel;
-      if (t > 0) v.currentTime = Math.max(0, Math.min(t, v.duration - 0.05));
-      v.play().catch(function () {});
-    };
+    loadClip(c).then(function (x) {
+      if (my !== seq) return;                   // 已經切到別的機位或關掉了
+      v.dataset.clip = c.id;
+      v.dataset.blobType = x.type;
+      v.onloadedmetadata = function () {
+        var t = rel == null ? 0 : (c.t_event || 0) + rel;
+        if (t > 0) v.currentTime = Math.max(0, Math.min(t, v.duration - 0.05));
+        $('pInfo').textContent = info;
+        // 自動播放被擋（例：iOS 需要再按一次）時，提示按 ▶
+        v.play().catch(function () { if (my === seq) $('pInfo').textContent = info + '　按 ▶ 開始播放'; });
+      };
+      v.src = x.url;
+      if (!keepTime) {
+        v.addEventListener('playing', function once() {
+          v.removeEventListener('playing', once);
+          if (my === seq || cur === ev) prefetchOthers(ev, c);
+        });
+      }
+    }, function (err) {
+      if (my !== seq) return;
+      $('pInfo').textContent = '影片載入失敗（' + err.message + '），請再點一次機位重試。';
+    });
   }
 
   function closeModal() {
     var v = $('pVideo');
-    v.pause(); v.removeAttribute('src'); v.load();
+    seq++;                                       // 還在下載的不要再播
+    v.pause(); v.onloadedmetadata = null; v.removeAttribute('src'); v.load();
+    delete v.dataset.clip; delete v.dataset.blobType;
+    dropBlobs();
     $('modal').classList.remove('open');
     cur = curClip = null;
   }
